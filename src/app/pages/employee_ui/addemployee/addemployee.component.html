@@ -1,0 +1,230 @@
+<p-fluid>
+    <div class="flex gap-4 mb-12">
+        <div>
+            <p-button
+                (click)="goToEmployeeList()"
+                icon="pi pi-arrow-left"
+                severity="contrast"
+                [style]="{ height: '100%', width: '3.5rem' }"
+                class="text-xl"
+            />
+        </div>
+        <div>
+            <div>
+                <span class="text-xl">Retourner à la liste des employés</span>
+            </div>
+            <div>
+                <span class="text-2xl font-bold text-primary"
+                    >Enregistrer un employé</span
+                >
+            </div>
+        </div>
+    </div>
+    <form
+        action=""
+        class="w-full mt-4"
+        [formGroup]="employeeForm"
+        (ngSubmit)="onSubmit()"
+    >
+        <div class="w-full">
+            <div class="card">
+                <div class="flex flex-col md:flex-row gap-6 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname">Nom</label>
+                        <input
+                            pInputText
+                            type="text"
+                            formControlName="lastname"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    employeeForm.controls['lastname'].errors,
+                            }"
+                        />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="firstname">Prénom</label>
+                        <input
+                            pInputText
+                            type="text"
+                            formControlName="firstname"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    employeeForm.controls['firstname'].errors,
+                            }"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 w-full mt-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="date_of_birth">Date de naissance</label>
+                        <p-datepicker
+                            class="w-full"
+                            formControlName="date_of_birth"
+                            [iconDisplay]="'input'"
+                            [showIcon]="true"
+                            inputId="icondisplay"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="genre">Genre</label>
+                        <p-select
+                            formControlName="genre"
+                            [options]="genres"
+                            optionLabel="name"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <h5>Informations de contact</h5>
+            <div class="card">
+                <div class="flex flex-col md:flex-row gap-6 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address">Adresse</label>
+                        <input
+                            pInputText
+                            type="text"
+                            formControlName="address"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address_mail">Adresse mail</label>
+                        <input
+                            pInputText
+                            type="email"
+                            formControlName="address_mail"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    employeeForm.controls['address_mail']
+                                        .errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="country">Pays</label>
+                        <p-select
+                            formControlName="country"
+                            [options]="countries"
+                            optionLabel="name"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 w-full mt-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="city">Ville</label>
+                        <input pInputText type="text" formControlName="city" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="personnal_mail_address"
+                            >Adresse mail personnel</label
+                        >
+                        <input
+                            pInputText
+                            type="email"
+                            formControlName="personnal_mail_address"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="phone">Numéro de téléphone</label>
+                        <input
+                            pInputText
+                            type="tel"
+                            formControlName="phone"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    employeeForm.controls['phone'].errors,
+                            }"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <h5>Informations additionnelles</h5>
+            <div class="card">
+                <div class="flex flex-col md:flex-row gap-6 w-full">
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="post">Poste</label>
+                        <input pInputText type="text" formControlName="post" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="start_date_of_hire"
+                            >Date début d’embauche</label
+                        >
+                        <p-datepicker
+                            class="w-full"
+                            formControlName="start_date_of_hire"
+                            [iconDisplay]="'input'"
+                            [showIcon]="true"
+                            inputId="icondisplay"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="contract_type">Type de contrat</label>
+                        <p-select
+                            formControlName="contract_type"
+                            [options]="contrats"
+                            optionLabel="name"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 w-full">
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="salary">Salaire</label>
+                        <input
+                            pInputText
+                            type="number"
+                            formControlName="salary"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="role_id">Rôle</label>
+                        <p-select
+                            formControlName="role_id"
+                            [options]="roles"
+                            optionLabel="name"
+                            class="w-full"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    employeeForm.controls['role_id'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full mt-6">
+                        <label for="department">Département</label>
+                        <p-select
+                            formControlName="department"
+                            [options]="departements"
+                            optionLabel="name"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-4 mb-6 mt-6">
+            <p-button
+                (click)="clearForm()"
+                label="Vider"
+                icon="pi pi-times"
+                severity="danger"
+                outlined
+            />
+            <p-button
+                type="submit"
+                label="Enregistrer"
+                icon="pi pi-save"
+                severity="contrast"
+                [loading]="loading"
+            />
+        </div>
+    </form>
+</p-fluid>

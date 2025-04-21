@@ -1,0 +1,383 @@
+<div *ngIf="products.length > 0">
+    <div class="card w-full flex gap-12">
+        <div style="padding-right: 2.6rem" class="flex gap-4">
+            <div class="">
+                <img style="width: 3.5rem" src="/icons/Cash.svg" alt="" />
+            </div>
+            <div class="mt flex flex-col gap-1">
+                <div><span class="text-sm">VALEUR TOTALE</span></div>
+                <div>
+                    <span class="text-xl font-bold">
+                        FCFA {{ getTotalPurchasePrice() | number: "1.0-0" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-1">
+            <div class="flex gap-2">
+                <span class="font-bold text-sm">{{ products.length }}</span>
+                <span>Produits</span>
+            </div>
+            <p-metergroup [style]="{ width: '100%' }" [value]="value" [max]="100" />
+        </div>
+    </div>
+    <div class="card w-full">
+        <div class="flex justify-between gap-4 mb-4">
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="applyFilter($event)"
+                            placeholder="Rechercher un produit..."
+                        />
+                    </p-iconfield>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <p-button
+                    (click)="goToAddProduct()"
+                    label="Ajouter"
+                    icon="fa-solid fa-plus"
+                    severity="contrast"
+                ></p-button>
+                <p-button
+                    label="Exporter"
+                    icon="pi pi-upload"
+                    severity="secondary"
+                    (onClick)="exportCSV()"
+                />
+            </div>
+        </div>
+        <div class="mt-4">
+            <p-table
+                #dt
+                [value]="products"
+                [globalFilterFields]="[
+                    'name',
+                    'code',
+                    'reference',
+                    'price',
+                    'quantity',
+                ]"
+                selectionMode="single"
+                dataKey="id"
+                [tableStyle]="{ 'min-width': '75rem' }"
+                [paginator]="true"
+                [rows]="40"
+                [rowsPerPageOptions]="[10, 20, 40, 60]"
+            >
+                <ng-template #header>
+                    <tr>
+                        <th>Codes</th>
+                        <th>Noms</th>
+                        <th>Réferences</th>
+                        <th>Fournisseurs</th>
+                        <th>Prix unitaire</th>
+                        <th>Quantités</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-product>
+                    <tr>
+                        <td>#{{ product.code }}</td>
+                        <td class="name-td">
+                            <i
+                                class="fa-solid fa-circle"
+                                [ngClass]="{
+                                    red: product.quantity < 10,
+                                    orange:
+                                        product.quantity >= 10 &&
+                                        product.quantity < 30,
+                                    green: product.quantity >= 30,
+                                }"
+                            >
+                            </i
+                            >{{ product.name }}
+                        </td>
+                        <td>#{{ product.reference }}</td>
+                        <td>
+                            <p-button
+                                label="Voir les fournisseurs"
+                                severity="info"
+                                (click)="showDialog(product.name)"
+                                text
+                            />
+                        </td>
+                        <td>
+                            <span style="font-weight: 500; color: rgb(47, 47, 47)"
+                                >FCFA
+                            </span>
+                            {{ product.price }}
+                        </td>
+                        <td>{{ product.quantity }}</td>
+                        <td>
+                            <div style="display: flex; gap: 1rem">
+                                <div>
+                                    <p-button
+                                        label=""
+                                        severity="info"
+                                        icon="fa-solid fa-pencil"
+                                        [outlined]="true"
+                                        (onClick)="goToDetails(product)"
+                                    />
+                                </div>
+                                <div>
+                                    <p-button
+                                        (click)="trash($event, product)"
+                                        label=""
+                                        severity="danger"
+                                        icon="fa-solid fa-trash-can"
+                                        [outlined]="true"
+                                    />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<div
+    style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 89vh;
+    "
+    *ngIf="products.length <= 0"
+>
+    <img style="width: 35rem" src="img/No data-rafiki.svg" alt="" />
+</div>
+
+<p-confirmdialog />
+
+<p-dialog
+    header="Les articles"
+    [(visible)]="articlesDialog"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '45vw', 'max-height': '50vh', 'overflow-y': 'auto' }"
+    [draggable]="true"
+    [resizable]="false"
+    (onHide)="clearSelectedSuppliers()"
+>
+    <p-table
+        [value]="selectedSupplierProducts"
+        selectionMode="single"
+        [tableStyle]="{ 'min-width': 'max-content' }"
+    >
+        <ng-template #header>
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-supplier>
+            <tr>
+                <td>{{ supplier.supplierName }}</td>
+                <td>FCFA {{ supplier.supplierPrice }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
+
+<p-dialog
+    header="Details du produit {{ product.name }}"
+    [(visible)]="articlesDetailsDialog"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '50vw', 'max-height': '90vh', 'overflow-y': 'auto' }"
+    [resizable]="false"
+    [modal]="true"
+    (onHide)="clearSelectedSuppliers()"
+>
+    <ng-template #content>
+        <p-fluid>
+            <form
+                [formGroup]="productForm"
+                (ngSubmit)="onSubmit()"
+                class="card flex flex-col gap-6 w-full"
+            >
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="code">Code</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="code"
+                            name="code"
+                            formControlName="code"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['code'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="reference">Référence</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="reference"
+                            name="reference"
+                            formControlName="reference"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['reference'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="designation">Designation</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="name"
+                            name="name"
+                            formControlName="name"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['name'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="category">Catégorie</label>
+                        <p-select
+                            formControlName="category"
+                            [options]="categories"
+                            optionLabel="name"
+                            class="w-full"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['category'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="quantity">Quantité en stock</label>
+                        <p-inputnumber
+                            type="text"
+                            id="quantity"
+                            name="quantity"
+                            formControlName="quantity"
+                            showButtons
+                            mode="decimal"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['quantity'].errors,
+                            }"
+                            required
+                        ></p-inputnumber>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="reorderThreshold"
+                            >Seuil de réapprovisionnement</label
+                        >
+                        <p-inputnumber
+                            type="text"
+                            id="minimum_stock"
+                            name="minimum_stock"
+                            formControlName="minimum_stock"
+                            required
+                            showButtons
+                            mode="decimal"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['minimum_stock']
+                                        .errors,
+                            }"
+                        ></p-inputnumber>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="weight">Poids(G)</label>
+                        <p-inputnumber
+                            type="text"
+                            id="weight"
+                            name="weight"
+                            formControlName="weight"
+                            showButtons
+                            mode="decimal"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['weight'].errors,
+                            }"
+                        ></p-inputnumber>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="brand">Marque</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="brand"
+                            name="brand"
+                            formControlName="brand"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['brand'].errors,
+                            }"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="supplier">Nom du fournisseur</label>
+                        <p-select
+                            formControlName="supplier"
+                            [options]="suppliers"
+                            optionLabel="supplierName"
+                            class="w-full"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    productForm.controls['supplier'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                </div>
+            </form>
+        </p-fluid>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button
+            (click)="clearForm()"
+            label="Vider"
+            icon="pi pi-times"
+            severity="danger"
+            outlined
+        />
+        <p-button
+            (click)="onSubmit()"
+            type="submit"
+            label="Enregister"
+            icon="pi pi-save"
+            severity="contrast"
+            [loading]="loading"
+        />
+    </ng-template>
+</p-dialog>

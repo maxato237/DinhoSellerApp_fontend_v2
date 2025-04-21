@@ -1,0 +1,241 @@
+<p-fluid>
+    <div class="">
+        <div class="flex gap-4 mb-12">
+            <div>
+                <p-button
+                    (click)="goToSupplierList()"
+                    icon="pi pi-arrow-left"
+                    severity="contrast"
+                    [style]="{ height: '100%', width: '3.5rem' }"
+                    class="text-xl"
+                />
+            </div>
+            <div class="">
+                <div>
+                    <span class="text-xl"
+                        >Retourner à la liste des fournisseurs</span
+                    >
+                </div>
+                <div>
+                    <span class="text-2xl font-bold text-primary"
+                        >Enregistrer un fournisseur</span
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+    <form
+        class="w-full mt-4"
+        [formGroup]="supplierForm"
+        (ngSubmit)="onSubmit()"
+    >
+        <div class="w-full mt-4">
+            <h4>Informations du fournisseur</h4>
+            <div class="card mt-6">
+                <div class="flex flex-col md:flex-row gap-6 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="name">Nom</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="name"
+                            name="name"
+                            formControlName="name"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    supplierForm.controls['name'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="status">Statut</label>
+                        <p-select
+                            formControlName="status"
+                            [options]="status"
+                            optionLabel="name"
+                            class="w-full"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    supplierForm.controls['status'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 mt-8 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address">Adresse</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="address"
+                            name="address"
+                            formControlName="address"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="city">Ville</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="city"
+                            name="city"
+                            formControlName="city"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 mt-8 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="postalCode">Code Postal</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="postalCode"
+                            name="postalCode"
+                            formControlName="postalCode"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="country">Pays</label>
+                        <p-select
+                            formControlName="country"
+                            [options]="countries"
+                            optionLabel="name"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 mt-8 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="phone">Téléphone</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            formControlName="phone"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    supplierForm.controls['phone'].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="email">Email</label>
+                        <input
+                            pInputText
+                            type="email"
+                            id="email"
+                            name="email"
+                            formControlName="email"
+                        />
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 mt-8 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="website">Site Web</label>
+                        <input
+                            pInputText
+                            type="url"
+                            id="website"
+                            name="website"
+                            formControlName="website"
+                        />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="preferredPaymentMethod"
+                            >Méthode de paiement préférée</label
+                        >
+                        <p-select
+                            formControlName="preferredPaymentMethod"
+                            [options]="preferredPaymentMethod"
+                            optionLabel="name"
+                            class="w-full"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    supplierForm.controls[
+                                        'preferredPaymentMethod'
+                                    ].errors,
+                            }"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <h4>Produits fournis</h4>
+            <div class="card">
+                <div
+                    class=""
+                    id="productsSupplied"
+                    formArrayName="productsSupplied"
+                >
+                    <div
+                        *ngFor="
+                            let product of productsSupplied.controls;
+                            let i = index
+                        "
+                        [formGroupName]="i"
+                        class="flex flex-col md:flex-row gap-6 m-4 w-full"
+                    >
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <input
+                                pInputText
+                                type="text"
+                                placeholder="Nom du produit"
+                                formControlName="productName"
+                                (input)="addProductIfNeeded(i)"
+                            />
+                        </div>
+                        <div
+                            style="align-items: center"
+                            class="flex gap-2 w-full"
+                        >
+                            <input
+                                pInputText
+                                type="number"
+                                placeholder="Prix"
+                                formControlName="price"
+                                (input)="addProductIfNeeded(i)"
+                            />
+                            <i
+                                style="
+                                    margin-left: 1rem;
+                                    cursor: pointer;
+                                    color: red;
+                                "
+                                (click)="removeProduct(i)"
+                                *ngIf="productsSupplied.length > 1"
+                                class="fa-solid fa-xmark"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-4 mb-6 mt-6">
+            <p-button
+                (click)="clearForm()"
+                label="Vider"
+                icon="pi pi-times"
+                severity="danger"
+                outlined
+            />
+            <p-button
+                type="submit"
+                label="Enregister"
+                icon="pi pi-save"
+                severity="contrast"
+                [loading]="loading"
+            />
+        </div>
+    </form>
+</p-fluid>

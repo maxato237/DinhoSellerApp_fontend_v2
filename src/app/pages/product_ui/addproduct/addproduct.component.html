@@ -1,0 +1,191 @@
+<p-fluid>
+    <div class="">
+        <div class="flex gap-4 mb-12">
+            <div>
+                <p-button
+                    (click)="backToListPage()"
+                    icon="pi pi-arrow-left"
+                    severity="contrast"
+                    [style]="{'height':'100%', 'width':'3.5rem'}"
+                    class="text-xl"
+                />
+            </div>
+            <div class="">
+                <div><span class="text-xl">Retourner à la liste des articles</span></div>
+                <div><span class="text-2xl font-bold text-primary">Enregistrer un article</span></div>
+            </div>
+        </div>
+    </div>
+    <form
+        [formGroup]="productForm"
+        (ngSubmit)="onSubmit()"
+        class="card flex flex-col gap-6 w-full mt-6"
+    >
+        <div class="flex flex-col md:flex-row gap-6 mt-8">
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="code">Code</label>
+                <input
+                    pInputText
+                    type="text"
+                    id="code"
+                    name="code"
+                    formControlName="code"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput && productForm.controls['code'].errors,
+                    }"
+                    required
+                />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="reference">Référence</label>
+                <input
+                    pInputText
+                    type="text"
+                    id="reference"
+                    name="reference"
+                    formControlName="reference"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['reference'].errors,
+                    }"
+                    required
+                />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="designation">Designation</label>
+                <input
+                    pInputText
+                    type="text"
+                    id="name"
+                    name="name"
+                    formControlName="name"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['name'].errors,
+                    }"
+                    required
+                />
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="category">Catégorie</label>
+                <p-select
+                    formControlName="category"
+                    [options]="categories"
+                    optionLabel="name"
+                    class="w-full"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['category'].errors,
+                    }"
+                    required
+                />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="quantity">Quantité en stock</label>
+                <p-inputnumber
+                    type="text"
+                    id="quantity"
+                    name="quantity"
+                    formControlName="quantity"
+                    showButtons
+                    mode="decimal"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['quantity'].errors,
+                    }"
+                    required
+                ></p-inputnumber>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="reorderThreshold"
+                    >Seuil de réapprovisionnement</label
+                >
+                <p-inputnumber
+                    type="text"
+                    id="minimum_stock"
+                    name="minimum_stock"
+                    formControlName="minimum_stock"
+                    required
+                    showButtons
+                    mode="decimal"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['minimum_stock'].errors,
+                    }"
+                ></p-inputnumber>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="weight">Poids(G)</label>
+                <p-inputnumber
+                    type="text"
+                    id="weight"
+                    name="weight"
+                    formControlName="weight"
+                    showButtons
+                    mode="decimal"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['weight'].errors,
+                    }"
+                ></p-inputnumber>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="brand">Marque</label>
+                <input
+                    pInputText
+                    type="text"
+                    id="brand"
+                    name="brand"
+                    formControlName="brand"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput && productForm.controls['brand'].errors,
+                    }"
+                />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+                <label for="supplier">Nom du fournisseur</label>
+                <p-select
+                    formControlName="supplier"
+                    [options]="suppliers"
+                    optionLabel="name"
+                    class="w-full"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            productForm.controls['supplier'].errors,
+                    }"
+                    required
+                />
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-4 mb-6 mt-6">
+            <p-button
+                (click)="clearForm()"
+                label="Vider"
+                icon="pi pi-times"
+                severity="danger"
+                outlined
+            />
+            <p-button
+                type="submit"
+                label="Enregister"
+                icon="pi pi-save"
+                severity="contrast"
+                [loading]="loading"
+            />
+        </div>
+    </form>
+</p-fluid>

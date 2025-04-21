@@ -1,0 +1,354 @@
+<div class="">
+    <div class="card" *ngIf="clients.length > 0">
+        <div class="flex justify-between gap-4">
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="applyFilter($event)"
+                            placeholder="Rechercher un client..."
+                        />
+                    </p-iconfield>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <p-button
+                    (click)="gotToAddClient()"
+                    label="Ajouter"
+                    icon="fa-solid fa-plus"
+                    severity="contrast"
+                ></p-button>
+                <p-button
+                    label="Exporter"
+                    icon="pi pi-upload"
+                    severity="secondary"
+                    (onClick)="exportCSV()"
+                />
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <p-table
+                #dt
+                [value]="clients"
+                [globalFilterFields]="[
+                    'name',
+                    'representant',
+                    'specific_price',
+                    'phone',
+                    'payment_method',
+                    'payment_requirement',
+                ]"
+                selectionMode="single"
+                dataKey="id"
+                [tableStyle]="{ 'min-width': '75vw' }"
+                [paginator]="true"
+                [rows]="40"
+                [rowsPerPageOptions]="[10, 20, 40, 60]"
+            >
+                <ng-template #header>
+                    <tr>
+                        <th>Noms</th>
+                        <th>Représentants</th>
+                        <th>Conditions de paiement</th>
+                        <th>Méthode de paiement</th>
+                        <th>% Réduction</th>
+                        <th>Téléphone</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-client>
+                    <tr>
+                        <td class="name-td">
+                            {{ client.name }}
+                        </td>
+                        <td>
+                            <p-button
+                                label="{{
+                                    getEmployeeName(client.representant)
+                                }}"
+                                severity="info"
+                                (click)="
+                                    goToEmplyeeDetails(client.representant)
+                                "
+                                text
+                            />
+                        </td>
+                        <td>{{ client.payment_requirement }}</td>
+                        <td>
+                            {{ client.payment_method }}
+                        </td>
+                        <td>
+                            {{ client.specific_price * 100 | number: "1.2-2" }}
+                        </td>
+                        <td>{{ client.phone }}</td>
+                        <td>
+                            <div style="display: flex; gap: 1rem">
+                                <div>
+                                    <p-button
+                                        label=""
+                                        severity="info"
+                                        icon="fa-solid fa-pencil"
+                                        [outlined]="true"
+                                        (onClick)="goToDetails(client)"
+                                    />
+                                </div>
+                                <div>
+                                    <p-button
+                                        (click)="trash($event, client)"
+                                        label=""
+                                        severity="danger"
+                                        icon="fa-solid fa-trash-can"
+                                        [outlined]="true"
+                                    />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <div
+            style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 89vh;
+            "
+            *ngIf="clients.length <= 0"
+        >
+            <img style="width: 26rem" src="img/No data-rafiki.svg" alt="" />
+        </div>
+    </div>
+    <div
+        style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 89vh;
+        "
+        *ngIf="clients.length <= 0"
+    >
+        <img style="width: 35rem" src="img/No data-rafiki.svg" alt="" />
+    </div>
+
+    <!-- Overlays -->
+    <!------------------------------------------------------------------------------------------------------->
+
+    <div class="card flex justify-center gap-2">
+        <p-confirmdialog />
+    </div>
+
+    <p-dialog
+        header="Details du client {{ client.name }}"
+        [(visible)]="clientDetailsDialog"
+        [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+        [style]="{ width: '50vw', 'max-height': '90vh', 'overflow-y': 'auto' }"
+        [resizable]="false"
+        [modal]="true"
+        (onHide)="clearSelectedClient()"
+    >
+        <ng-template #content>
+            <p-fluid>
+                <form
+                    action=""
+                    class="w-full mt-4"
+                    [formGroup]="clientForm"
+                    (ngSubmit)="onSubmit()"
+                >
+                    <div class="w-full mt-4 card">
+                        <div class="flex flex-col md:flex-row gap-6 w-full">
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="name">Nom</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    formControlName="name"
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            erreurInput &&
+                                            clientForm.controls['name'].errors,
+                                    }"
+                                    required
+                                />
+                            </div>
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Representant</label>
+                                <p-select
+                                    formControlName="representant"
+                                    id="representant"
+                                    name="representant"
+                                    [options]="employees"
+                                    optionLabel="lastname"
+                                    class="w-full"
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            erreurInput &&
+                                            clientForm.controls['representant']
+                                                .errors,
+                                    }"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col md:flex-row mt-4 gap-6 w-full"
+                        >
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Adresse principale</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="principal_address"
+                                    name="principal_address"
+                                    formControlName="principal_address"
+                                />
+                            </div>
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Email</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    formControlName="email"
+                                />
+                            </div>
+                        </div>
+                        <div
+                            class="flex mt-6 flex-col md:flex-row gap-6 w-full"
+                        >
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Téléphone</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="phone"
+                                    name="phone"
+                                    formControlName="phone"
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            erreurInput &&
+                                            clientForm.controls['phone'].errors,
+                                    }"
+                                    required
+                                />
+                            </div>
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Méthode de paiement</label>
+                                <p-select
+                                    formControlName="payment_method"
+                                    [options]="payment_methods"
+                                    optionLabel="name"
+                                    class="w-full"
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            erreurInput &&
+                                            clientForm.controls[
+                                                'payment_method'
+                                            ].errors,
+                                    }"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div
+                            class="flex mt-6 flex-col md:flex-row gap-6 w-full"
+                        >
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">% Reduction</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="specific_price"
+                                    name="specific_price"
+                                    formControlName="specific_price"
+                                />
+                            </div>
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Conditions de paiement</label>
+                                <p-select
+                                    formControlName="payment_requirement"
+                                    [options]="payment_requirements"
+                                    optionLabel="name"
+                                    class="w-full"
+                                />
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex mt-6 flex-col md:flex-row gap-6 w-full"
+                        >
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Adresse de facturation</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="facturation_address"
+                                    name="facturation_address"
+                                    formControlName="facturation_address"
+                                />
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex flex-col mt-6 md:flex-row gap-6 w-full"
+                        >
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="">Notes</label>
+                                <textarea
+                                    rows="5"
+                                    cols="30"
+                                    pTextarea
+                                    formControlName="notes"
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap mt-6 gap-2 w-full">
+                            <p-checkbox
+                                id="tva"
+                                binary="true"
+                                formControlName="tva"
+                            ></p-checkbox>
+                            <label for="tva">Avec TVA</label>
+                        </div>
+
+                        <div class="flex flex-wrap mt-6 gap-2 w-full">
+                            <p-checkbox
+                                id="ecomp"
+                                binary="true"
+                                formControlName="ecomp"
+                            ></p-checkbox>
+                            <label for="ecomp">Avec ECOMP</label>
+                        </div>
+                    </div>
+                </form>
+            </p-fluid>
+        </ng-template>
+
+        <ng-template #footer>
+            <p-button
+                (click)="clearForm()"
+                label="Vider"
+                icon="pi pi-times"
+                severity="danger"
+                outlined
+            />
+            <p-button
+                (click)="onSubmit()"
+                type="submit"
+                label="Enregister"
+                icon="pi pi-save"
+                severity="contrast"
+                [loading]="loading"
+            />
+        </ng-template>
+    </p-dialog>
+</div>
