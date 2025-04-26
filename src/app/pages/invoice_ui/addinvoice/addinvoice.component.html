@@ -1,1 +1,235 @@
-<p>addinvoice works!</p>
+<div class="card min-h-screen">
+    <div [@slideToggle]="showInputs ? 'visible' : 'hidden'">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+                <label class="font-semibold text-lg">Num :</label>
+                <span
+                    class="text-gray-500 font-semibold ml-2 dark:text-gray-400 cursor-pointer"
+                    (click)="copyToClipboard(Num)"
+                >
+                    #{{ Num }}
+                </span>
+                <span *ngIf="copied" class="ml-2 text-green-500"
+                    >Copié ! ✅</span
+                >
+            </div>
+            <div class="flex justify-end">
+                <p-select
+                    [options]="clients"
+                    [(ngModel)]="selectedClient"
+                    optionLabel="name"
+                    [filter]="true"
+                    filterBy="name"
+                    [showClear]="true"
+                    placeholder="Sélectionner le client"
+                    class="w-full md:w-80 dark:text-gray-400"
+                    (onChange)="updatevisibleCountTva()"
+                >
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <div>{{ selectedOption.name }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-client #item>
+                        <div class="flex items-center gap-2">
+                            <div>{{ client.name }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+        </div>
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 mt-6"
+            [ngClass]="{
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-4': visibleCountStatus >= 4,
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3': visibleCountStatus === 3,
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-2': visibleCountStatus === 2,
+            }"
+        >
+            <div>
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Status</label
+                >
+                <div>
+                    <p-select
+                        [options]="status"
+                        [(ngModel)]="selectedStatus"
+                        optionLabel="name"
+                        placeholder="Choisir le status"
+                        class="w-full"
+                        (onChange)="updatevisibleCountStatus()"
+                    />
+                </div>
+            </div>
+            <div *ngIf="!selectedStatus || selectedStatus?.code == 1">
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Avance</label
+                >
+                <div>
+                    <p-iconfield>
+                        <input
+                            pInputText
+                            [(ngModel)]="value2"
+                            placeholder="Normal"
+                            class="w-full"
+                        />
+                        <p-inputicon class="fa-solid fa-dollar-sign" />
+                    </p-iconfield>
+                </div>
+            </div>
+            <div *ngIf="!selectedStatus || selectedStatus?.code !== 0" >
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 w-full mb-1"
+                    >Echéance</label
+                >
+                <div>
+                    <p-datepicker
+                        [(ngModel)]="date"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        inputId="icondisplay"
+                        [style]="{ width: '100%' }"
+                    />
+                </div>
+            </div>
+            <div>
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Date de création</label
+                >
+                <div>
+                    <p-datepicker
+                        [(ngModel)]="date"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        inputId="icondisplay"
+                        [style]="{ width: '100%' }"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:gap-12 items-center">
+            <div class="grid md:grid-cols-4 gap-4 mb-6"
+                [ngClass]="{
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-4': visibleCountTva >= 4,
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-3': visibleCountTva  === 3,
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-2': visibleCountTva  === 2,
+                }"
+            >
+                <div>
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >Total HT</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        variant="filled"
+                    />
+                </div>
+                <div *ngIf="!selectedClient || selectedClient?.concern_ecomp">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >ECOMP</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        variant="filled"
+                    />
+                </div>
+                <div>
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >TTC</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        variant="filled"
+                    />
+                </div>
+                <div *ngIf="!selectedClient ||selectedClient?.assujetti_tva">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >TVA</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        variant="filled"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p-divider align="center" type="dotted">
+        <p-button
+            (click)="toggleInputs()"
+            [link]="true"
+            label="Emails"
+            [label]="showInputs ? 'Cacher' : 'Afficher'"
+            [icon]="
+                showInputs ? 'pi pi-angle-double-up' : 'pi pi-angle-double-down'
+            "
+        />
+    </p-divider>
+
+    <div class="overflow rounded-lg">
+        <p-table
+            [value]="lignes"
+            class="w-full text-sm text-left text-gray-700 dark:text-gray-400"
+        >
+            <ng-template #header>
+                <tr>
+                    <th>DESIGNATION</th>
+                    <th>QUANTITE</th>
+                    <th>PUH (FCFA)</th>
+                    <th>PTH (FCFA)</th>
+                    <th>PVC (FCFA)</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-ligne let-i="rowIndex">
+                <tr>
+                  <td><input type="text" [(ngModel)]="ligne.designation" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td><input type="number" [(ngModel)]="ligne.quantite" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td><input type="number" [(ngModel)]="ligne.puh" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td><input type="number" [(ngModel)]="ligne.pth" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td><input type="number" [(ngModel)]="ligne.pvc" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td>
+                    <button *ngIf="lignes.length > 1" (click)="supprimerLigne(i)">
+                      <i class="fa fa-xmark text-xs"></i>
+                    </button>
+                  </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="flex flex-row gap-5 md:gap-10 justify-start mt-6">
+        <div class="flex flex-row gap-6">
+            <p-button
+                label="Vider"
+                variant="outlined"
+                severity="danger"
+                icon="pi pi-times"
+            />
+
+            <p-splitbutton
+                label="Imprimer"
+                icon="pi pi-print"
+                dropdownIcon="pi pi-cog"
+                [model]="items"
+                severity="contrast"
+            />
+        </div>
+    </div>
+</div>

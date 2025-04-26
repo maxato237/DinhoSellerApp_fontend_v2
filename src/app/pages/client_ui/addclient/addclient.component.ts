@@ -93,7 +93,6 @@ export class AddclientComponent implements OnInit {
             },
             error: (error: HttpErrorResponse) => {
                 this.showError('Erreur lors de la récupération des employés');
-                console.error(error.error.error);
             },
         });
     }

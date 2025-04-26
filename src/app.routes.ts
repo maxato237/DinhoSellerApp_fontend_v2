@@ -3,12 +3,15 @@ import { AppLayout } from './app/layout/component/app.layout';
 import { Dashboard } from './app/pages/dashboard/dashboard';
 import { NotfoundComponent } from './app/pages/notfound/notfound.component';
 import { SettingsComponent } from './app/pages/settings/settings.component';
+import { SetupComponent } from './app/pages/setup/setup.component';
+import { authGuard } from './app/pages/guards/auth.guard';
 
 
 export const appRoutes: Routes = [
     {
         path: '',
         component: AppLayout,
+        canActivateChild: [authGuard],
         children: [
             { path: '', component: Dashboard },
             { path: 'settings', component: SettingsComponent },
@@ -20,6 +23,7 @@ export const appRoutes: Routes = [
         ]
     },
     { path: 'notfound', component: NotfoundComponent },
+    { path: 'setup', component: SetupComponent },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/notfound' }
 ];
