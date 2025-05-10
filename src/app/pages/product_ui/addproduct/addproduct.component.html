@@ -6,13 +6,21 @@
                     (click)="backToListPage()"
                     icon="pi pi-arrow-left"
                     severity="contrast"
-                    [style]="{'height':'100%', 'width':'3.5rem'}"
+                    [style]="{ height: '100%', width: '3.5rem' }"
                     class="text-xl"
                 />
             </div>
             <div class="">
-                <div><span class="text-xl">Retourner à la liste des articles</span></div>
-                <div><span class="text-2xl font-bold text-primary">Enregistrer un article</span></div>
+                <div>
+                    <span class="text-xl"
+                        >Retourner à la liste des articles</span
+                    >
+                </div>
+                <div>
+                    <span class="text-2xl font-bold text-primary"
+                        >Enregistrer un article</span
+                    >
+                </div>
             </div>
         </div>
     </div>
@@ -61,10 +69,10 @@
                     id="name"
                     name="name"
                     formControlName="name"
+                    (blur)="filterSuppliers(productForm.get('name')?.value)"
                     [ngClass]="{
                         'ng-invalid ng-dirty':
-                            erreurInput &&
-                            productForm.controls['name'].errors,
+                            erreurInput && productForm.controls['name'].errors,
                     }"
                     required
                 />
@@ -156,16 +164,19 @@
             </div>
             <div class="flex flex-wrap gap-2 w-full">
                 <label for="supplier">Nom du fournisseur</label>
-                <p-select
-                    formControlName="supplier"
-                    [options]="suppliers"
-                    optionLabel="name"
-                    class="w-full"
+                <p-multiselect
+                    [options]="filteredSuppliers"
+                    formControlName="suppliers"
+                    optionLabel="supplierName"
+                    [maxSelectedLabels]="2"
+                    styleClass="w-full"
+                    variant="filled"
                     [ngClass]="{
                         'ng-invalid ng-dirty':
                             erreurInput &&
-                            productForm.controls['supplier'].errors,
+                            productForm.controls['suppliers'].errors,
                     }"
+                    readonly="true"
                     required
                 />
             </div>

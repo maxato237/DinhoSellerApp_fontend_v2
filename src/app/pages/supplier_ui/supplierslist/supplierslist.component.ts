@@ -237,8 +237,6 @@ export class SupplierslistComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        console.log(this.supplierForm.value);
-
         if (this.supplierForm.valid) {
             // Filtrer les produits vides
             const filteredProducts =
@@ -251,7 +249,7 @@ export class SupplierslistComponent implements OnInit {
             const updatedSupplier = {
                 ...this.supplier,
                 ...this.supplierForm.value,
-                productsSupplied: filteredProducts, // On met à jour avec les produits filtrés
+                productsSupplied: filteredProducts,
             };
 
             this.supplierService
@@ -285,42 +283,43 @@ export class SupplierslistComponent implements OnInit {
 
     goToDetails(supplier: any) {
         this.supplier = supplier;
+
+        this.supplierForm = this.fb.group({
+            name: [this.supplier.name, Validators.required],
+            status: [
+                this.status[
+                    this.mapStatus(this.supplier.status)
+                ],
+                Validators.required,
+            ],
+            address: [this.supplier.address],
+            city: [this.supplier.city],
+            postalCode: [this.supplier.postalCode],
+            country: [this.countries[this.mapCountry(this.supplier.country)] || null],
+            phone: [this.supplier.phone, Validators.required],
+            email: [this.supplier.email, [Validators.email]],
+            website: [this.supplier.website],
+            preferredPaymentMethod: [
+                this.preferredPaymentMethod[
+                    this.mapPaymentMethod(
+                        this.supplier.preferredPaymentMethod
+                    )
+                ] || null,
+                Validators.required,
+            ],
+            productsSupplied: this.fb.array([]),
+        });
+
+
         this.supplierService
             .get_products_supplied_by_supplier(supplier.name)
             .subscribe({
                 next: (response) => {
+                    console.log(response);
                     response.forEach((product: any) => {
-                        this.supplierForm = this.fb.group({
-                            name: [this.supplier.name, Validators.required],
-                            status: [
-                                this.status[
-                                    this.mapStatus(this.supplier.status)
-                                ],
-                                Validators.required,
-                            ],
-                            address: [this.supplier.address],
-                            city: [this.supplier.city],
-                            postalCode: [this.supplier.postalCode],
-                            country: [this.countries[this.mapCountry(this.supplier.country)] || null],
-                            phone: [this.supplier.phone, Validators.required],
-                            email: [this.supplier.email, [Validators.email]],
-                            website: [this.supplier.website],
-                            preferredPaymentMethod: [
-                                this.preferredPaymentMethod[
-                                    this.mapPaymentMethod(
-                                        this.supplier.preferredPaymentMethod
-                                    )
-                                ] || null,
-                                Validators.required,
-                            ],
-                            productsSupplied: this.fb.array([]),
-                        });
                         this.addProduct(product);
                     });
                     this.addProduct();
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.showError(error.error.error);
                 },
             });
         this.supplierDetailsDialog = true;
@@ -333,7 +332,7 @@ export class SupplierslistComponent implements OnInit {
             SupplierName: null,
         },
     ): void {
-        const productsArray = this.supplierForm.get(
+        var productsArray = this.supplierForm.get(
             'productsSupplied',
         ) as FormArray;
         productsArray.push(

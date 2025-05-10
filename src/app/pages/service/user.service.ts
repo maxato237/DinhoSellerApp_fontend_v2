@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { ApplicationSettingService } from './application.setting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private appConfigService: ApplicationSettingService,
   ) {}
 
   httpOption() {
@@ -34,7 +36,8 @@ export class UserService {
   }
 
   checkSuperAdminConfigured(): Observable<any> {
-    return this.http.get(this.BaseUrl + 'isSuperAdminConfigured', this.httpOption());
+    const isConfigured = this.appConfigService.settings.isSuperAdminConfigured;
+    return of({ isSuperAdminConfigured: isConfigured });
   }
 
   createUser(formData: FormData): Observable<any> {

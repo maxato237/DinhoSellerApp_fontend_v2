@@ -1,6 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { InvoicesData } from '../invoice_ui/addinvoice/invoicesdata';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -30,10 +29,6 @@ export class InvoiceService {
         };
 
         return httpOptions3;
-    }
-
-    getInvoice(): Observable<any[]> {
-        return of(InvoicesData);
     }
 
     getInvoiceCode(): Observable<any> {

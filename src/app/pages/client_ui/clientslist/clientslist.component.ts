@@ -103,16 +103,14 @@ export class ClientslistComponent {
             },
             error: (error:HttpErrorResponse) => {
                 this.showError(error.error.error);
-                console.error(error.error.error);
             },
         });
         this.employeeService.getAllUsers().subscribe({
             next: (data) => {
                 this.employees = data;
-                console.log(this.employees);
             },
             error: (error:HttpErrorResponse) => {
-                console.error(error.error.error);
+                this.showError(error.error.error);
             },
         });
         this.clientForm = this.fb.group({

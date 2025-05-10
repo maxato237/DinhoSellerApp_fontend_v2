@@ -18,7 +18,11 @@
                 <span class="font-bold text-sm">{{ products.length }}</span>
                 <span>Produits</span>
             </div>
-            <p-metergroup [style]="{ width: '100%' }" [value]="value" [max]="100" />
+            <p-metergroup
+                [style]="{ width: '100%' }"
+                [value]="value"
+                [max]="100"
+            />
         </div>
     </div>
     <div class="card w-full">
@@ -107,7 +111,8 @@
                             />
                         </td>
                         <td>
-                            <span style="font-weight: 500; color: rgb(47, 47, 47)"
+                            <span
+                                style="font-weight: 500; color: rgb(47, 47, 47)"
                                 >FCFA
                             </span>
                             {{ product.price }}
@@ -345,16 +350,20 @@
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="supplier">Nom du fournisseur</label>
-                        <p-select
-                            formControlName="supplier"
+                        <p-multiselect
                             [options]="suppliers"
+                            formControlName="suppliers"
                             optionLabel="supplierName"
-                            class="w-full"
+                            [maxSelectedLabels]="2"
+                            styleClass="w-full"
+                            variant="filled"
+
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    productForm.controls['supplier'].errors,
+                                    productForm.controls['suppliers'].errors,
                             }"
+                            readonly="true"
                             required
                         />
                     </div>

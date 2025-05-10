@@ -1,5 +1,5 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, inject } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
     provideRouter,
@@ -11,6 +11,13 @@ import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
 import { AuthInterceptor } from './app/pages/interceptors/auth-interceptor.service';
 import { MessageService } from 'primeng/api';
+import { provideAppInitializer } from '@angular/core';
+import { ApplicationSettingService } from './app/pages/service/application.setting.service';
+
+export function loadSettings() {
+    const appSettingService = inject(ApplicationSettingService);
+    return appSettingService.loadConfig();
+  }
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -28,6 +35,8 @@ export const appConfig: ApplicationConfig = {
             theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } },
         }),
         provideHttpClient(withInterceptors([AuthInterceptor])),
-        MessageService
+        MessageService,
+        ApplicationSettingService,
+        provideAppInitializer(loadSettings),
     ],
 };

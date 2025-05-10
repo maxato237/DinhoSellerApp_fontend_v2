@@ -10,10 +10,8 @@ export const superadminGuard: CanActivateFn = (route, state) => {
   return userService.checkSuperAdminConfigured().pipe(
     map((response: any) => {
       if (response.isSuperAdminConfigured) {
-        console.log(response.isSuperAdminConfigured);
         return true;
       } else {
-        console.log(response.isSuperAdminConfigured);
         router.navigate(['/setup']);
         return false;
       }

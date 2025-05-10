@@ -1,4 +1,4 @@
-<div class="card min-h-screen">
+<form [formGroup]="invoiceForm" class="card min-h-screen">
     <div [@slideToggle]="showInputs ? 'visible' : 'hidden'">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -23,7 +23,16 @@
                     [showClear]="true"
                     placeholder="Sélectionner le client"
                     class="w-full md:w-80 dark:text-gray-400"
+                    formControlName="client"
                     (onChange)="updatevisibleCountTva()"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput &&
+                            invoiceForm.controls[
+                                'client'
+                            ].errors,
+                    }"
+                    required
                 >
                     <ng-template #selectedItem let-selectedOption>
                         <div class="flex items-center gap-2">
@@ -58,7 +67,16 @@
                         optionLabel="name"
                         placeholder="Choisir le status"
                         class="w-full"
+                        formControlName="status"
                         (onChange)="updatevisibleCountStatus()"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty':
+                                erreurInput &&
+                                invoiceForm.controls[
+                                    'status'
+                                ].errors,
+                        }"
+                        required
                     />
                 </div>
             </div>
@@ -71,9 +89,8 @@
                     <p-iconfield>
                         <input
                             pInputText
-                            [(ngModel)]="value2"
-                            placeholder="Normal"
                             class="w-full"
+                            formControlName="avance"
                         />
                         <p-inputicon class="fa-solid fa-dollar-sign" />
                     </p-iconfield>
@@ -86,9 +103,9 @@
                 >
                 <div>
                     <p-datepicker
-                        [(ngModel)]="date"
                         [iconDisplay]="'input'"
                         [showIcon]="true"
+                        formControlName="echeance"
                         inputId="icondisplay"
                         [style]="{ width: '100%' }"
                     />
@@ -101,11 +118,19 @@
                 >
                 <div>
                     <p-datepicker
-                        [(ngModel)]="date"
                         [iconDisplay]="'input'"
                         [showIcon]="true"
                         inputId="icondisplay"
+                        formControlName="dateAdded"
                         [style]="{ width: '100%' }"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty':
+                                erreurInput &&
+                                invoiceForm.controls[
+                                    'dateAdded'
+                                ].errors,
+                        }"
+                        required
                     />
                 </div>
             </div>
@@ -124,12 +149,7 @@
                         class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
                         >Total HT</label
                     >
-                    <input
-                        class="w-full"
-                        type="text"
-                        pInputText
-                        variant="filled"
-                    />
+                    <input   pInputText [disabled]="true" [value]="HT" variant="filled" class="w-full" />
                 </div>
                 <div *ngIf="!selectedClient || selectedClient?.concern_ecomp">
                     <label
@@ -141,6 +161,8 @@
                         type="text"
                         pInputText
                         variant="filled"
+                        [disabled]="true"
+                        [value]="ECOMP"
                     />
                 </div>
                 <div>
@@ -153,6 +175,8 @@
                         type="text"
                         pInputText
                         variant="filled"
+                        [disabled]="true"
+                        [value]="TTC"
                     />
                 </div>
                 <div *ngIf="!selectedClient ||selectedClient?.assujetti_tva">
@@ -161,36 +185,34 @@
                         >TVA</label
                     >
                     <input
+                        pInputText
+                        [disabled]="true"
                         class="w-full"
                         type="text"
-                        pInputText
                         variant="filled"
+                        [value]="TVA"
+
                     />
                 </div>
             </div>
         </div>
     </div>
-
     <p-divider align="center" type="dotted">
         <p-button
-            (click)="toggleInputs()"
-            [link]="true"
-            label="Emails"
-            [label]="showInputs ? 'Cacher' : 'Afficher'"
-            [icon]="
-                showInputs ? 'pi pi-angle-double-up' : 'pi pi-angle-double-down'
-            "
-        />
+        (click)="toggleInputs()"
+        [link]="true"
+        [label]="showInputs ? 'Cacher' : 'Afficher'"
+        [icon]="showInputs ? 'pi pi-angle-double-up' : 'pi pi-angle-double-down'"
+    />
     </p-divider>
-
-    <div class="overflow rounded-lg">
+    <div class="rounded-lg">
         <p-table
-            [value]="lignes"
+            [value]="all_lignes.controls"
             class="w-full text-sm text-left text-gray-700 dark:text-gray-400"
         >
-            <ng-template #header>
+            <ng-template pTemplate="header">
                 <tr>
-                    <th>DESIGNATION</th>
+                    <th style="width: 20rem;">DESIGNATION</th>
                     <th>QUANTITE</th>
                     <th>PUH (FCFA)</th>
                     <th>PTH (FCFA)</th>
@@ -198,15 +220,15 @@
                     <th></th>
                 </tr>
             </ng-template>
-            <ng-template #body let-ligne let-i="rowIndex">
-                <tr>
-                  <td><input type="text" [(ngModel)]="ligne.designation" (input)="ajouterLigneSiNecessaire(i)" /></td>
-                  <td><input type="number" [(ngModel)]="ligne.quantite" (input)="ajouterLigneSiNecessaire(i)" /></td>
-                  <td><input type="number" [(ngModel)]="ligne.puh" (input)="ajouterLigneSiNecessaire(i)" /></td>
-                  <td><input type="number" [(ngModel)]="ligne.pth" (input)="ajouterLigneSiNecessaire(i)" /></td>
-                  <td><input type="number" [(ngModel)]="ligne.pvc" (input)="ajouterLigneSiNecessaire(i)" /></td>
+            <ng-template  pTemplate="body" let-ligne let-i="rowIndex">
+                <tr class="bg-white dark:bg-gray-900" [formGroup]="ligne">
+                  <td class="autocomplete-wrapper w-full"><p-autocomplete formControlName="DESIGNATION" [suggestions]="selectedProduct" (completeMethod)="autofindname($event)" optionLabel="name" (input)="ajouterLigneSiNecessaire(i)" (onSelect)="autoaddprices(i)"  [appendTo]="'body'" /></td>
+                  <td><input formControlName="QUANTITY" [style]="{'border' : 'none', 'box-shadow':'none', 'width':'9rem'}" pInputText type="number" (input)="ajouterLigneSiNecessaire(i)"/></td>
+                  <td><input formControlName="PUH" readonly [style]="{'border' : 'none', 'box-shadow':'none', 'width':'9rem'}" pInputText type="number" (input)="ajouterLigneSiNecessaire(i)"/></td>
+                  <td><input formControlName="PTH" readonly [style]="{'border' : 'none', 'box-shadow':'none','width':'9rem'}" pInputText type="number" (input)="ajouterLigneSiNecessaire(i)" /></td>
+                  <td><input formControlName="PVC" readonly [style]="{'border' : 'none', 'box-shadow':'none','width':'9rem'}" pInputText type="number" (input)="ajouterLigneSiNecessaire(i)" /></td>
                   <td>
-                    <button *ngIf="lignes.length > 1" (click)="supprimerLigne(i)">
+                    <button *ngIf="all_lignes.length > 1" (click)="supprimerLigne(i)">
                       <i class="fa fa-xmark text-xs"></i>
                     </button>
                   </td>
@@ -221,9 +243,12 @@
                 variant="outlined"
                 severity="danger"
                 icon="pi pi-times"
+                (onClick)="clearForm()"
             />
 
             <p-splitbutton
+                (onClick)="submit()"
+                type ="submit"
                 label="Imprimer"
                 icon="pi pi-print"
                 dropdownIcon="pi pi-cog"
@@ -232,4 +257,4 @@
             />
         </div>
     </div>
-</div>
+</form>

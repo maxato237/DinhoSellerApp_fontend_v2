@@ -13,6 +13,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { FluidModule } from 'primeng/fluid';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
 import {
     FormBuilder,
     FormGroup,
@@ -40,6 +41,7 @@ import { SelectModule } from 'primeng/select';
         SelectModule,
         FormsModule,
         ReactiveFormsModule,
+        MultiSelectModule
     ],
     providers: [ConfirmationService],
     templateUrl: './productslist.component.html',
@@ -84,7 +86,7 @@ export class ProductslistComponent implements OnInit {
             minimum_stock: [null, [Validators.required, Validators.min(1)]],
             weight: [null, [Validators.min(0)]],
             brand: [''],
-            supplier: [null, Validators.required],
+            suppliers: [null, Validators.required],
         });
     }
 
@@ -92,7 +94,6 @@ export class ProductslistComponent implements OnInit {
         this.productService.getAllProducts().subscribe({
             next: (response) => {
                 this.products = response;
-                console.log(this.products);
                 this.updateStockProportions();
             },
             error: (error: HttpErrorResponse) => {
@@ -194,6 +195,9 @@ export class ProductslistComponent implements OnInit {
             .subscribe({
                 next: (response) => {
                     this.suppliers = response;
+
+                    console.log(response);
+
                     this.productForm = this.fb.group({
                         code: [product.code, Validators.required],
                         reference: [product.reference, Validators.required],
@@ -214,8 +218,8 @@ export class ProductslistComponent implements OnInit {
                         ],
                         weight: [product.weight, [Validators.min(0)]],
                         brand: [product.brand],
-                        supplier: [
-                            this.suppliers[this.mapSupplier(response.supplier)],
+                        suppliers: [
+                            response,
                             Validators.required,
                         ],
                     });
@@ -230,11 +234,6 @@ export class ProductslistComponent implements OnInit {
     mapCategries(categary: string): number {
         const found = this.categories.find((s) => s.name === categary);
         return found ? parseInt(found.code, 10) : 0;
-    }
-
-    mapSupplier(supplier: string): number {
-        const found = this.suppliers.find((s) => s.name === supplier);
-        return found ? this.suppliers.indexOf(found) : 0;
     }
 
     applyFilter(event: Event) {

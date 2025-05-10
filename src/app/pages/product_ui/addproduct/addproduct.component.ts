@@ -16,6 +16,11 @@ import { MessageService } from 'primeng/api';
 import { SupplierService } from '../../service/supplier.service';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+
 @Component({
     selector: 'app-addproduct',
     imports: [
@@ -27,6 +32,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
+        MultiSelectModule,
     ],
     templateUrl: './addproduct.component.html',
     styleUrl: './addproduct.component.scss',
@@ -79,19 +85,20 @@ export class AddproductComponent implements OnInit {
         { name: 'SUCRE', code: '5' },
         { name: 'THE, INFUSION', code: '5' },
         { name: 'VINAIGRES', code: '5' },
-
     ];
     suppliers: any[] | undefined;
     erreurInput = false;
     responseError: any;
     loading: boolean = false;
+    filteredSuppliers: any[] = [];
+    designationInputSubject: Subject<string> = new Subject<string>();
 
     constructor(
         private fb: FormBuilder,
         private router: Router,
         private productService: ProductService,
         private messageService: MessageService,
-        private supplierService: SupplierService
+        private supplierService: SupplierService,
     ) {}
 
     ngOnInit(): void {
@@ -109,7 +116,7 @@ export class AddproductComponent implements OnInit {
             minimum_stock: [null, [Validators.required, Validators.min(1)]],
             weight: [null, [Validators.min(0)]],
             brand: [''],
-            supplier: [null, Validators.required],
+            suppliers: [null, Validators.required],
         });
     }
 
@@ -125,6 +132,28 @@ export class AddproductComponent implements OnInit {
                 );
             },
         });
+    }
+
+    filterSuppliers(productName: string) {
+        console.log(productName);
+
+        this.productService
+            .get_products_supplied_by_product(productName)
+            .subscribe({
+                next: (response) => {
+                    this.filteredSuppliers = response;
+                    this.productForm.patchValue({
+                        suppliers: this.filteredSuppliers,
+                    });
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.showError(error.error.error);
+                },
+            });
+    }
+
+    designationInputChanged(event: any) {
+        const inputValue = event.target.value.toLowerCase();
     }
 
     onSubmit() {

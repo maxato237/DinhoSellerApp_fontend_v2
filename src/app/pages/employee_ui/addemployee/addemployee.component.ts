@@ -45,7 +45,6 @@ export class AddemployeeComponent {
         { name: 'Masculin', code: 'M' },
         { name: 'Feminin', code: 'F' },
     ];
-
     countries: any[] = [
         { name: 'Afrique du Sud', code: 'ZA' },
         { name: 'Algérie', code: 'DZ' },
@@ -101,12 +100,10 @@ export class AddemployeeComponent {
         { name: 'Zambie', code: 'ZM' },
         { name: 'Zimbabwe', code: 'ZW' },
     ];
-
     roles: any[] = [
         { name: 'Administrateur', code: 2 },
         { name: 'Utilisateur', code: 3},
     ];
-
     contrats: any[] = [
         { name: 'Contrat à Durée Indéterminée', code: 'cdi' },
         { name: 'Contrat à Durée Déterminée', code: 'cdd' },
@@ -123,7 +120,6 @@ export class AddemployeeComponent {
         { name: 'Portage Salarial', code: 'portage_salarial' },
         { name: 'Convention de Stage', code: 'stage' },
     ];
-
     departements: any[] = [
         { name: 'Direction', code: 'direction' },
         { name: 'Ventes', code: 'ventes' },
