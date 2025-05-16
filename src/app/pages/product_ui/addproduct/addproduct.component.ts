@@ -135,7 +135,6 @@ export class AddproductComponent implements OnInit {
     }
 
     filterSuppliers(productName: string) {
-        console.log(productName);
 
         this.productService
             .get_products_supplied_by_product(productName)
@@ -174,7 +173,6 @@ export class AddproductComponent implements OnInit {
         } else {
             this.erreurInput = true;
             this.loading = false;
-            console.log('erreur dans le formulaire');
             this.showError('Veuillez remplir tous les champs obligatoires.');
         }
     }

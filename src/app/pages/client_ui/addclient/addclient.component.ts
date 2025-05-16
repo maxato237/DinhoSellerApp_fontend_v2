@@ -103,7 +103,6 @@ export class AddclientComponent implements OnInit {
             this.showError('Veuillez remplir tous les champs obligatoires.');
         } else {
             this.erreurInput = false;
-            console.log(this.clientForm.value);
             this.loading = true;
             this.clientService.addCient(this.clientForm.value).subscribe({
                 next: () => {

@@ -1,0 +1,373 @@
+<div [formGroup]="form" class="card w-full">
+    <div [@slideToggle]="showInputs ? 'visible' : 'hidden'">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+                <label class="font-semibold text-lg">Facture </label>
+                <input
+                    formControlName="num"
+                    [style]="{
+                        border: 'none',
+                        'box-shadow': 'none',
+                        width: '9rem',
+                    }"
+                    readonly
+                    pInputText
+                />
+            </div>
+            <div class="flex justify-end">
+                <p-select
+                    [options]="clients"
+                    optionLabel="name"
+                    [filter]="true"
+                    filterBy="name"
+                    [showClear]="true"
+                    placeholder="Sélectionner le client"
+                    class="w-full md:w-80 dark:text-gray-400"
+                    formControlName="client"
+                    (onChange)="handleClientChange($event)"
+                    [readonly]="isReadonly"
+                    [variant]="selectVariant"
+                    [ngClass]="{
+                        'ng-invalid ng-dirty':
+                            erreurInput && form.controls['client'].errors,
+                    }"
+                    required
+                >
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <div>{{ selectedOption.name }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-client #item>
+                        <div class="flex items-center gap-2">
+                            <div>{{ client.name }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+        </div>
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 mt-6"
+            [ngClass]="{
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-4':
+                    visibleCountStatus >= 4,
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
+                    visibleCountStatus === 3,
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-2':
+                    visibleCountStatus === 2,
+            }"
+        >
+            <div>
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Status</label
+                >
+                <div>
+                    <p-select
+                        [options]="status"
+                        optionLabel="name"
+                        placeholder="Choisir le status"
+                        class="w-full"
+                        formControlName="status"
+                        (onChange)="updatevisibleCountStatus()"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty':
+                                erreurInput && form.controls['status'].errors,
+                        }"
+                        required
+                    />
+                </div>
+            </div>
+            <div
+                *ngIf="
+                    !this.form.get('status')?.value ||
+                    this.form.get('status')?.value.code == 1
+                "
+            >
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Avance</label
+                >
+                <div>
+                    <p-iconfield>
+                        <input
+                            pInputText
+                            class="w-full"
+                            formControlName="avance"
+                        />
+                        <p-inputicon class="fa-solid fa-dollar-sign" />
+                    </p-iconfield>
+                </div>
+            </div>
+            <div
+                *ngIf="
+                    !this.form.get('status')?.value ||
+                    this.form.get('status')?.value.code !== 0
+                "
+            >
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 w-full mb-1"
+                    >Echéance</label
+                >
+                <div>
+                    <p-datepicker
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        formControlName="echeance"
+                        inputId="icondisplay"
+                        [style]="{ width: '100%' }"
+                    />
+                </div>
+            </div>
+            <div>
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                    >Date de création</label
+                >
+                <div>
+                    <p-datepicker
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        inputId="icondisplay"
+                        formControlName="dateAdded"
+                        [style]="{ width: '100%' }"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty':
+                                erreurInput &&
+                                form.controls['dateAdded'].errors,
+                        }"
+                        required
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:gap-12 items-center">
+            <div
+                class="grid md:grid-cols-4 gap-4 mb-6"
+                [ngClass]="{
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-4':
+                        visibleCountTva >= 4,
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
+                        visibleCountTva === 3,
+                    'grid-cols-1 md:grid-cols-2 lg:grid-cols-2':
+                        visibleCountTva === 2,
+                }"
+            >
+                <div>
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >Total HT</label
+                    >
+                    <input
+                        pInputText
+                        formControlName="HT"
+                        [readOnly]="true"
+                        variant="filled"
+                        class="w-full"
+                        [style]="{
+                            border: 'none',
+                            'box-shadow': 'none',
+                        }"
+                    />
+                </div>
+                <div
+                    *ngIf="
+                        !this.form.get('client')?.value ||
+                        this.form.get('client')?.value.concern_ecomp
+                    "
+                >
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >ECOMP</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        variant="filled"
+                        formControlName="ECOMP"
+                        [readOnly]="true"
+                        [style]="{
+                            border: 'none',
+                            'box-shadow': 'none',
+                        }"
+                    />
+                </div>
+                <div>
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >TTC</label
+                    >
+                    <input
+                        class="w-full"
+                        type="text"
+                        pInputText
+                        formControlName="TTC"
+                        [readOnly]="true"
+                        variant="filled"
+                        [style]="{
+                            border: 'none',
+                            'box-shadow': 'none',
+                        }"
+                    />
+                </div>
+                <div
+                    *ngIf="
+                        !this.form.get('client')?.value ||
+                        this.form.get('client')?.value.assujetti_tva
+                    "
+                >
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1"
+                        >TVA</label
+                    >
+                    <input
+                        pInputText
+                        formControlName="TVA"
+                        [readOnly]="true"
+                        class="w-full"
+                        type="text"
+                        variant="filled"
+                        [style]="{
+                            border: 'none',
+                            'box-shadow': 'none',
+                        }"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-divider align="center" type="dotted">
+        <p-button
+            (click)="toggleInputs()"
+            [link]="true"
+            [label]="showInputs ? 'Cacher' : 'Afficher'"
+            [icon]="
+                showInputs ? 'pi pi-angle-double-up' : 'pi pi-angle-double-down'
+            "
+        />
+    </p-divider>
+    <div class="rounded-lg">
+        <p-table
+            [value]="getLignes()"
+            class="w-full text-sm text-left text-gray-700 dark:text-gray-400"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 20rem">DESIGNATION</th>
+                    <th>QUANTITE</th>
+                    <th>PUH (FCFA)</th>
+                    <th>PTH (FCFA)</th>
+                    <th>PVC (FCFA)</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ligne let-i="rowIndex">
+                <tr class="bg-white dark:bg-gray-900" [formGroup]="ligne">
+                    <td class="autocomplete-wrapper w-full">
+                        <p-autocomplete
+                            formControlName="DESIGNATION"
+                            [suggestions]="selectedProduct"
+                            (completeMethod)="autofindname($event)"
+                            optionLabel="name"
+                            (input)="ajouterLigneSiNecessaire(i)"
+                            (onSelect)="autoaddprices(i)"
+                            [appendTo]="'body'"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            formControlName="QUANTITY"
+                            [style]="{
+                                border: 'none',
+                                'box-shadow': 'none',
+                                width: '9rem',
+                            }"
+                            pInputText
+                            type="number"
+                            (input)="ajouterLigneSiNecessaire(i)"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            formControlName="PUH"
+                            readonly
+                            [style]="{
+                                border: 'none',
+                                'box-shadow': 'none',
+                                width: '9rem',
+                            }"
+                            pInputText
+                            type="number"
+                            (input)="ajouterLigneSiNecessaire(i)"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            formControlName="PTH"
+                            readonly
+                            [style]="{
+                                border: 'none',
+                                'box-shadow': 'none',
+                                width: '9rem',
+                            }"
+                            pInputText
+                            type="number"
+                            (input)="ajouterLigneSiNecessaire(i)"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            formControlName="PVC"
+                            readonly
+                            [style]="{
+                                border: 'none',
+                                'box-shadow': 'none',
+                                width: '9rem',
+                            }"
+                            pInputText
+                            type="number"
+                            (input)="ajouterLigneSiNecessaire(i)"
+                        />
+                    </td>
+                    <td>
+                        <button
+                            *ngIf="
+                                all_lignes.length > 1 &&
+                                i !== all_lignes.length - 1
+                            "
+                            (click)="supprimerLigne(i)"
+                        >
+                            <i class="fa fa-xmark text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div
+        *ngIf="showsSubmitButton"
+        class="flex flex-row gap-5 md:gap-10 justify-start mt-6 mb-1"
+    >
+        <div class="flex flex-row gap-6">
+            <p-button
+                label="Vider"
+                variant="outlined"
+                severity="danger"
+                icon="pi pi-times"
+                (onClick)="clearForm()"
+            />
+
+            <p-splitbutton
+                (onClick)="submit()"
+                type="submit"
+                label="Imprimer"
+                icon="pi pi-print"
+                dropdownIcon="pi pi-cog"
+                [model]="items"
+                severity="contrast"
+            />
+        </div>
+    </div>
+</div>

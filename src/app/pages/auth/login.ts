@@ -215,7 +215,6 @@ export class Login {
                     }, 2000);
                 },
                 error: (error: HttpErrorResponse) => {
-                    console.log('Erreur API reçue : ', error);
                     if (error.error && error.error.message) {
                         this.responseError = error.error.message;
                     } else {

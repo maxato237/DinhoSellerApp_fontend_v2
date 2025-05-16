@@ -1,0 +1,72 @@
+<div class="m-12">
+    <div class="d-flex flex flex-row justify-between inline-block align-middle">
+        <div class="flex gap-4 mb-12">
+            <div>
+                <p-button
+                    (click)="backToListPage()"
+                    icon="pi pi-arrow-left"
+                    severity="contrast"
+                    [style]="{ height: '100%', width: '3.5rem' }"
+                    class="text-xl"
+                />
+            </div>
+            <div class="">
+                <div>
+                    <span class="text-xl"
+                        >Retourner à l'ajout d'une facture</span
+                    >
+                </div>
+                <div>
+                    <span class="text-2xl font-bold text-primary"
+                        >Les factures divisées</span
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="text-xl">
+            <p-button
+                [style]="{ 'font-size': '1.3rem' }"
+                label="Imprimer les factures"
+                icon="pi pi-print"
+                severity="contrast"
+                (onClick)="printAllFactures()"
+            />
+        </div>
+    </div>
+
+    <div *ngFor="let factureForm of dividedInvoices; let i = index">
+        <div class="mb-8">
+            <p-fieldset>
+                <ng-template #header>
+                    <div class="flex items-center gap-2 px-2">
+                        <i class="pi pi-receipt"></i>
+                        <span class="font-bold"
+                            >Facture divisée {{ i + 1 }}</span
+                        >
+                    </div>
+                </ng-template>
+                <app-invoice-form
+                    [form]="factureForm"
+                    [clients]="clients"
+                    [client]="client"
+                    [isReadonly]="isReadonly"
+                    [selectVariant]="selectVariant"
+                    [showsSubmitButton]="showsSubmitButton"
+                    [invoiceDevidedlignes]="lignesDividedInvoicesArray[i]"
+                    [divisedstatus]="selectedStatus"
+                    [status]="status"
+                    [products]="products"
+                    [selectedProduct]="selectedProduct"
+                    [settings]="settings"
+                    [showInputs]="showInputs"
+                    [erreurInput]="erreurInput"
+                    [copied]="copied"
+                    (cleared)="clearForm()"
+                    (error)="showError($event)"
+                ></app-invoice-form>
+            </p-fieldset>
+        </div>
+    </div>
+
+    <app-footer></app-footer>
+</div>

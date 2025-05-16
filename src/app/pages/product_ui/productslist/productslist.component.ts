@@ -196,8 +196,6 @@ export class ProductslistComponent implements OnInit {
                 next: (response) => {
                     this.suppliers = response;
 
-                    console.log(response);
-
                     this.productForm = this.fb.group({
                         code: [product.code, Validators.required],
                         reference: [product.reference, Validators.required],

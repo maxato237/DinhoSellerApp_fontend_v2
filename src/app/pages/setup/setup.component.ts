@@ -118,7 +118,6 @@ export class SetupComponent implements OnInit {
             summary: 'Success',
             detail: 'Enregistrement effectué avec succès',
         });
-        console.log('je suis arrivé à sucess');
     }
 
     showError(message: string) {
@@ -127,7 +126,6 @@ export class SetupComponent implements OnInit {
             summary: 'Error',
             detail: message,
         });
-        console.log('je suis arrivé à error');
     }
 
     onSubmit() {

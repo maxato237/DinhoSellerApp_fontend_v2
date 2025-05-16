@@ -208,7 +208,6 @@ export class AddsupplierComponent {
             });
         } else {
             this.erreurInput = true;
-            console.log('erreur dans le formulaire');
             this.showError('Veuillez remplir tous les champs obligatoires.');
         }
     }

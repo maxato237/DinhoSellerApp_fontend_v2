@@ -163,8 +163,6 @@ export class EmployeeslistComponent implements OnInit  {
         this.employeeService.getAllUsers().subscribe({
             next: (response: any) => {
                 this.employees = response;
-                console.log(this.employees);
-
             },
             error: (error: HttpErrorResponse) => {
                 console.error(error.error.error);
@@ -255,7 +253,6 @@ export class EmployeeslistComponent implements OnInit  {
 
     onSubmit() {
         this.loading = true;
-        console.log(this.employeeForm.value);
 
         if (this.employeeForm.valid) {
 
@@ -294,7 +291,6 @@ export class EmployeeslistComponent implements OnInit  {
 
     goToDetails(employee: any) {
         this.employee = employee;
-        console.log(this.employee);
 
         this.employeeForm = this.fb.group({
             lastname: [employee.lastname, Validators.required],

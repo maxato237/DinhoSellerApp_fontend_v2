@@ -219,7 +219,6 @@ export class ClientslistComponent {
 
     onSubmit() {
         this.loading = true;
-        console.log(this.clientForm.value);
 
         if (this.clientForm.valid) {
             const updatedClient = {
@@ -249,7 +248,6 @@ export class ClientslistComponent {
         } else {
             this.erreurInput = true;
             this.loading = false;
-            console.log('Erreur dans le formulaire');
             this.showError('Veuillez remplir tous les champs obligatoires.');
         }
     }

@@ -1,0 +1,18 @@
+.autocomplete-wrapper .p-autocomplete {
+    width: 100% !important;
+}
+::ng-deep .autocomplete-wrapper .p-autocomplete {
+    width: 100% !important;
+}
+::ng-deep .autocomplete-wrapper .p-inputtext {
+    border: none !important;
+    box-shadow: none !important;
+    width: 27rem !important;
+}
+
+.facture-container {
+    width: 100%;
+    max-width: 500px !important;
+    margin: 0 auto;
+    padding: 1rem;
+}

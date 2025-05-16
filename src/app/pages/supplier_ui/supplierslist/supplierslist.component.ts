@@ -141,7 +141,6 @@ export class SupplierslistComponent implements OnInit {
         this.supplierService.getAllSuppliers().subscribe({
             next: (response: any) => {
                 this.suppliers = response;
-                console.log(this.suppliers);
             },
             error: (error: HttpErrorResponse) => {
                 console.error(error.error.error);
@@ -226,7 +225,6 @@ export class SupplierslistComponent implements OnInit {
             .subscribe({
                 next: (response) => {
                     this.selectedSupplierProducts = response;
-                    console.log(response);
                 },
                 error: (error: HttpErrorResponse) => {
                     this.showError(error.error.error);
@@ -276,7 +274,6 @@ export class SupplierslistComponent implements OnInit {
         } else {
             this.erreurInput = true;
             this.loading = false;
-            console.log('Erreur dans le formulaire');
             this.showError('Veuillez remplir tous les champs obligatoires.');
         }
     }
@@ -315,7 +312,6 @@ export class SupplierslistComponent implements OnInit {
             .get_products_supplied_by_supplier(supplier.name)
             .subscribe({
                 next: (response) => {
-                    console.log(response);
                     response.forEach((product: any) => {
                         this.addProduct(product);
                     });
