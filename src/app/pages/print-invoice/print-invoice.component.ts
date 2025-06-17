@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, ElementRef, ViewChild} from '@angular/core';
 import { FactureComponent } from '../shared/facture/facture.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -12,23 +12,38 @@ import { MessageService } from 'primeng/api';
     styleUrl: './print-invoice.component.scss',
 })
 export class PrintInvoiceComponent{
+
     showfactureModel: boolean = false;
+    invoice: any;
+    isOneInvoice!: boolean;
+    code_facture: any;
     dividedInvoices: any[] = [];
+    @ViewChild('pdfContent', { static: false }) pdfContentRef!: ElementRef;
 
     constructor(private router: Router,private messageService: MessageService,) {
         const nav = this.router.getCurrentNavigation();
         const state = nav?.extras?.state as any;
 
-        if (!state || !state.dividedInvoices) {
-            this.showError("Erreur: nous n\'arrivons pas imprimer vos factures");
+        if (!state) {
+            this.showError("Erreur: nous n\'arrivons pas imprimer");
             return;
         }
 
-        this.dividedInvoices = state.dividedInvoices;
+        this.isOneInvoice = state.isOneInvoice;
+        this.code_facture = state.code_facture;
 
+        if(this.isOneInvoice){
+            this.invoice = state.invoice;
+        }else{
+            this.dividedInvoices = state.dividedInvoices;
+        }
+
+    }
+
+    ngAfterViewInit(): void {
         setTimeout(() => {
-            window.print();
-        }, 300);
+          window.print()
+        }, 500);
     }
 
     showError(message: string) {

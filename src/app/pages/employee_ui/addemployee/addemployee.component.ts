@@ -162,6 +162,7 @@ export class AddemployeeComponent {
             this.erreurInput = true;
             this.showError('Veuillez remplir tous les champs obligatoires.');
         } else {
+            console.log(this.employeeForm.value);
             this.erreurInput = false;
             this.loading = true;
             this.employeeService.addEmployee(this.employeeForm.value).subscribe({

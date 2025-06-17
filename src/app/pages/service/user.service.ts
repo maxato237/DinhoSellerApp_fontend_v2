@@ -36,8 +36,7 @@ export class UserService {
   }
 
   checkSuperAdminConfigured(): Observable<any> {
-    const isConfigured = this.appConfigService.settings.isSuperAdminConfigured;
-    return of({ isSuperAdminConfigured: isConfigured });
+    return this.http.get(`${this.BaseUrl}auth/all`, this.httpOption());
   }
 
   createUser(formData: FormData): Observable<any> {

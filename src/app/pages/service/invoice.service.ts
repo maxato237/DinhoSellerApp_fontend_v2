@@ -34,4 +34,8 @@ export class InvoiceService {
     getInvoiceCode(): Observable<any> {
         return this.http.get(`${this.BaseUrl}invoices/code`, this.httpOption());
     }
+
+    addInvoice(invoice:any):Observable<any>{
+        return this.http.post(`${this.BaseUrl}invoices/add`,invoice, this.httpOption())
+    }
 }

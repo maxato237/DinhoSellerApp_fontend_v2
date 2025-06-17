@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     ReactiveFormsModule,
     FormsModule,
@@ -8,6 +8,8 @@ import {
     FormBuilder,
     Validators,
     FormArray,
+    FormControl,
+    AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -31,7 +33,7 @@ import { FluidModule } from 'primeng/fluid';
     templateUrl: './addsupplier.component.html',
     styleUrl: './addsupplier.component.scss',
 })
-export class AddsupplierComponent {
+export class AddsupplierComponent implements OnInit {
     supplierForm: FormGroup;
     erreurInput = false;
     responseError: any;
@@ -103,7 +105,6 @@ export class AddsupplierComponent {
         { name: 'Zimbabwe', code: 'ZW' },
     ];
 
-
     constructor(
         private fb: FormBuilder,
         private messageService: MessageService,
@@ -112,6 +113,7 @@ export class AddsupplierComponent {
     ) {
         this.supplierForm = this.fb.group({
             name: ['', Validators.required],
+            nc: [''],
             status: [null, Validators.required],
             address: [''],
             city: [''],
@@ -123,6 +125,8 @@ export class AddsupplierComponent {
             preferredPaymentMethod: [null, Validators.required],
             productsSupplied: this.fb.array([this.createProductFormGroup()]),
         });
+    }
+    ngOnInit(): void {
     }
 
     get productsSupplied(): FormArray {
@@ -161,7 +165,10 @@ export class AddsupplierComponent {
 
     onSubmit() {
         if (this.supplierForm.valid) {
+            console.log(this.supplierForm.value);
+
             const name = this.supplierForm.get('name')?.value;
+            const nc = this.supplierForm.get('nc')?.value;
             const status = this.supplierForm.get('status')?.value.name;
             const address = this.supplierForm.get('address')?.value;
             const city = this.supplierForm.get('city')?.value;
@@ -177,6 +184,7 @@ export class AddsupplierComponent {
 
             // Création de l'objet JSON
             const supplierData = {
+                nc: nc,
                 name: name,
                 status: status,
                 address: address,

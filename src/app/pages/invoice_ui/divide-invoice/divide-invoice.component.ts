@@ -16,11 +16,11 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { ApplicationSettingService } from '../service/application.setting.service';
-import { ClientService } from '../service/client.service';
-import { InvoiceService } from '../service/invoice.service';
+import { ApplicationSettingService } from '../../service/application.setting.service';
+import { ClientService } from '../../service/client.service';
+import { InvoiceService } from '../../service/invoice.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProductService } from '../service/products.service';
+import { ProductService } from '../../service/products.service';
 import { CommonModule } from '@angular/common';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BadgeModule } from 'primeng/badge';
@@ -30,9 +30,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
-import { InvoiceFormComponent } from '../shared/invoice-form/invoice-form.component';
-import { FieldsetModule } from 'primeng/fieldset';
-import { AppFooter } from '../../layout/component/app.footer';
+import { InvoiceFormComponent } from '../../shared/invoice-form/invoice-form.component';
+import { AppFooter } from '../../../layout/component/app.footer';
 
 @Component({
     selector: 'app-divide-invoice',
@@ -49,7 +48,6 @@ import { AppFooter } from '../../layout/component/app.footer';
         ReactiveFormsModule,
         AutoCompleteModule,
         InvoiceFormComponent,
-        FieldsetModule,
         AppFooter,
     ],
     templateUrl: './divide-invoice.component.html',
@@ -107,7 +105,6 @@ export class DivideInvoiceComponent implements OnInit {
         this.lignes = state.lignes;
         this.nombreFactures = state.nombreFactures;
         this.selectedStatus = state.status;
-        this.Num = state.num;
     }
 
     ngOnInit() {
@@ -144,7 +141,6 @@ export class DivideInvoiceComponent implements OnInit {
             );
 
             const form = this.fb.group({
-                num: [this.Num],
                 client: [null, Validators.required],
                 status: [null, Validators.required],
                 avance: [null],
@@ -153,7 +149,7 @@ export class DivideInvoiceComponent implements OnInit {
                 HT: ['0.0'],
                 TTC: ['0.0'],
                 TVA: ['0.0'],
-                ECOMP: ['0.0'],
+                PRECOMPTE: ['0.0'],
                 lignes: this.fb.array([]),
             });
 
@@ -171,7 +167,9 @@ export class DivideInvoiceComponent implements OnInit {
         });
     }
 
-    clearForm() {}
+    clearForm() {
+        this.dividedInvoices.forEach((f) => f.reset());
+    }
 
     backToListPage() {
         this.router.navigate(['/invoices/addinvoice']);
@@ -186,7 +184,8 @@ export class DivideInvoiceComponent implements OnInit {
 
             this.router.navigate(['/invoices/print-invoice'], {
                 state: {
-                    dividedInvoices: invoiceData
+                    dividedInvoices: invoiceData,
+                    isOneInvoice: false,
                 },
             })
         } else {

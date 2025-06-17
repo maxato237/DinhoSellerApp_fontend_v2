@@ -80,9 +80,10 @@ export class AddclientComponent implements OnInit {
             payment_requirement: [''],
             payment_method: ['', Validators.required],
             facturation_address: [''],
+            nc: [''],
             notes: [''],
             tva: [true],
-            ecomp: [false],
+            precompte: [false],
         });
     }
 

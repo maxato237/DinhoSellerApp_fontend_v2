@@ -108,7 +108,7 @@ export class AddproductComponent implements OnInit {
 
     initForm() {
         this.productForm = this.fb.group({
-            code: ['', Validators.required],
+            code: [''],
             reference: ['', Validators.required],
             name: ['', Validators.required],
             category: [null, Validators.required],
@@ -135,7 +135,6 @@ export class AddproductComponent implements OnInit {
     }
 
     filterSuppliers(productName: string) {
-
         this.productService
             .get_products_supplied_by_product(productName)
             .subscribe({
@@ -147,6 +146,7 @@ export class AddproductComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.showError(error.error.error);
+                    this.productForm.get('suppliers')?.reset();
                 },
             });
     }
@@ -159,10 +159,13 @@ export class AddproductComponent implements OnInit {
         this.loading = true;
 
         if (this.productForm.valid) {
+            console.log(this.productForm);
+
             const newProduct = this.productForm.value;
             this.productService.addProduct(newProduct).subscribe({
                 next: (response: any) => {
                     this.showSuccess('Produit ajouté avec succès !');
+                    this.productForm.reset();
                     this.loading = false;
                 },
                 error: (error: any) => {

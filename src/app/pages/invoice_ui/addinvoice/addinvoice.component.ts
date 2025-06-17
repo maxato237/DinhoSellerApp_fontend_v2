@@ -32,7 +32,6 @@ import { ProductService } from '../../service/products.service';
 import { InvoiceFormComponent } from '../../shared/invoice-form/invoice-form.component';
 import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
-import { NgxPrintModule } from 'ngx-print';
 
 @Component({
     selector: 'app-addinvoice',
@@ -50,7 +49,6 @@ import { NgxPrintModule } from 'ngx-print';
         AutoCompleteModule,
         InvoiceFormComponent,
         DialogModule,
-        NgxPrintModule,
     ],
     templateUrl: './addinvoice.component.html',
     styleUrl: './addinvoice.component.scss',
@@ -100,11 +98,10 @@ export class AddinvoiceComponent implements OnInit {
         private router: Router,
     ) {
         this.invoiceForm = this.fb.group({
-            num: [''],
             HT: ['0.0'],
             TTC: ['0.0'],
             TVA: ['0.0'],
-            ECOMP: ['0.0'],
+            PRECOMPTE: ['0.0'],
             client: [null, Validators.required],
             status: [null, Validators.required],
             avance: [null],
@@ -118,11 +115,6 @@ export class AddinvoiceComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.invoiceService.getInvoiceCode().subscribe({
-            next: (data: any) =>
-                this.invoiceForm.get('num')?.setValue(data.message),
-            error: (err: HttpErrorResponse) => this.showError(err.error.error),
-        });
 
         this.clientService.getAllClients().subscribe({
             next: (data: any) => (this.clients = data),
@@ -185,7 +177,6 @@ export class AddinvoiceComponent implements OnInit {
                     lignes: lignesPleines,
                     status: status,
                     nombreFactures: nombreFactures,
-                    num: this.invoiceForm.get('num')?.value,
                 },
             });
         } else {
@@ -204,5 +195,22 @@ export class AddinvoiceComponent implements OnInit {
 
     clearForm() {}
 
-    onInvoiceSubmitted() {}
+    onInvoiceSubmitted() {
+        const invoiceData = this.invoiceForm.getRawValue();
+
+        this.invoiceService.addInvoice(invoiceData).subscribe({
+            next:(response)=>{
+                this.router.navigate(['/invoices/print-invoice'], {
+                    state: {
+                        invoice: invoiceData,
+                        isOneInvoice: true,
+                        code_facture: response.message.code_facture
+                    },
+                });
+            },error:()=>{
+                this.showError('Erreur inatendu !')
+            }
+        });
+
+    }
 }

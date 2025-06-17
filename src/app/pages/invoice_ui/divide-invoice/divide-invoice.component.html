@@ -36,35 +36,29 @@
 
     <div *ngFor="let factureForm of dividedInvoices; let i = index">
         <div class="mb-8">
-            <p-fieldset>
-                <ng-template #header>
-                    <div class="flex items-center gap-2 px-2">
-                        <i class="pi pi-receipt"></i>
-                        <span class="font-bold"
-                            >Facture divisée {{ i + 1 }}</span
-                        >
-                    </div>
-                </ng-template>
-                <app-invoice-form
-                    [form]="factureForm"
-                    [clients]="clients"
-                    [client]="client"
-                    [isReadonly]="isReadonly"
-                    [selectVariant]="selectVariant"
-                    [showsSubmitButton]="showsSubmitButton"
-                    [invoiceDevidedlignes]="lignesDividedInvoicesArray[i]"
-                    [divisedstatus]="selectedStatus"
-                    [status]="status"
-                    [products]="products"
-                    [selectedProduct]="selectedProduct"
-                    [settings]="settings"
-                    [showInputs]="showInputs"
-                    [erreurInput]="erreurInput"
-                    [copied]="copied"
-                    (cleared)="clearForm()"
-                    (error)="showError($event)"
-                ></app-invoice-form>
-            </p-fieldset>
+            <div class="flex items-center gap-2 p-2 bg-white w-max relative top-1">
+                <i class="pi pi-receipt"></i>
+                <span class="font-bold">Facture divisée {{ i + 1 }}</span>
+            </div>
+            <app-invoice-form
+                [form]="factureForm"
+                [clients]="clients"
+                [client]="client"
+                [isReadonly]="isReadonly"
+                [selectVariant]="selectVariant"
+                [showsSubmitButton]="showsSubmitButton"
+                [invoiceDevidedlignes]="lignesDividedInvoicesArray[i]"
+                [divisedstatus]="selectedStatus"
+                [status]="status"
+                [products]="products"
+                [selectedProduct]="selectedProduct"
+                [settings]="settings"
+                [showInputs]="showInputs"
+                [erreurInput]="erreurInput"
+                [copied]="copied"
+                (cleared)="clearForm()"
+                (error)="showError($event)"
+            ></app-invoice-form>
         </div>
     </div>
 

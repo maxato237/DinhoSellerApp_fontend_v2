@@ -41,7 +41,7 @@ import { SelectModule } from 'primeng/select';
         SelectModule,
         FormsModule,
         ReactiveFormsModule,
-        MultiSelectModule
+        MultiSelectModule,
     ],
     providers: [ConfirmationService],
     templateUrl: './productslist.component.html',
@@ -98,7 +98,7 @@ export class ProductslistComponent implements OnInit {
             },
             error: (error: HttpErrorResponse) => {
                 this.showError(error.error.error);
-            }
+            },
         });
     }
 
@@ -216,10 +216,7 @@ export class ProductslistComponent implements OnInit {
                         ],
                         weight: [product.weight, [Validators.min(0)]],
                         brand: [product.brand],
-                        suppliers: [
-                            response,
-                            Validators.required,
-                        ],
+                        suppliers: [response, Validators.required],
                     });
                     this.articlesDetailsDialog = true;
                 },

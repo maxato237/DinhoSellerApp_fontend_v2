@@ -134,6 +134,7 @@ export class ClientslistComponent {
         this.clientDetailsDialog = true;
         this.clientForm = this.fb.group({
             name: [client.name, Validators.required],
+            nc: [client.nc],
             representant: [this.mapEmployee(client.representant)|| null, Validators.required],
             principal_address: [client.principal_address],
             email: [client.email],
@@ -144,7 +145,7 @@ export class ClientslistComponent {
             facturation_address: [client.facturation_address],
             notes: [client.notes],
             tva: [client.assujetti_tva],
-            ecomp: [client.concern_ecomp],
+            precompte: [client.concern_precompte],
         });
     }
 

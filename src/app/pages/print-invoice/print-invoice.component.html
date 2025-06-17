@@ -1,5 +1,12 @@
-<div>
-    <div *ngFor="let invoice of dividedInvoices" class="page-break-after">
-      <app-facture [invoice]="invoice"></app-facture>
+<div *ngIf="!isOneInvoice" #pdfContent id="facturesToPrint" >
+    <div id="facturesToPrint" *ngFor="let invoice of dividedInvoices" class="page-break-after">
+      <app-facture [invoice]="invoice" [code_facture]="code_facture"></app-facture>
     </div>
 </div>
+
+<div *ngIf="isOneInvoice" #pdfContent id="facturesToPrint" >
+    <div class="page-break-after">
+      <app-facture [invoice]="invoice" [code_facture]="code_facture"></app-facture>
+    </div>
+</div>
+

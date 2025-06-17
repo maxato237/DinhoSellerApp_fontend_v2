@@ -10,8 +10,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
 import {
+    AbstractControl,
     FormArray,
     FormBuilder,
+    FormControl,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
@@ -149,6 +151,7 @@ export class SupplierslistComponent implements OnInit {
         });
         this.supplierForm = this.fb.group({
             name: ['', Validators.required],
+            nc: [''],
             status: [null, Validators.required],
             address: [''],
             city: [''],
@@ -283,6 +286,7 @@ export class SupplierslistComponent implements OnInit {
 
         this.supplierForm = this.fb.group({
             name: [this.supplier.name, Validators.required],
+            nc: [this.supplier.nc],
             status: [
                 this.status[
                     this.mapStatus(this.supplier.status)

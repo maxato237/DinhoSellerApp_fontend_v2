@@ -1,128 +1,233 @@
-<div class="w-full p-6 bg-white">
+<div class="w-full p-6 bg-white text-sm">
     <div>
-      <img src="/img/factureheader.png" alt="">
+        <img src="/img/factureheader.png" alt="" />
     </div>
 
-    <div class="grid grid-cols-2 border-black border-2 mt-8">
-      <div class="border-black border-r-2 border-b-2 font-extrabold" style="background-color: #edeae0;">
-        <span class="inline-block align-middle p-2">ADRESSE DRINHOSELLER</span>
-      </div>
-      <div class="border-black border-b-2" style="background-color: #edeae0;">
-        <span class="inline-block align-middle p-2">Rond point express</span>
-      </div>
-      <div class="border-black border-r-2 font-extrabold bg-gray-50">
-        <span class="inline-block align-middle p-2">CLIENT</span>
-      </div>
-      <div class="bg-gray-50">
-        <span class="inline-block align-middle p-2">{{ invoice.client.name || '______________' }}</span>
-      </div>
+    <div class="grid grid-cols-2 border-black border mt-8 text-sm">
+        <div class="border-black border-r border-b font-bold">
+            <span class="inline-block align-middle p-1"
+                >ADRESSE DRINHOSELLER</span
+            >
+        </div>
+        <div class="border-black border-b">
+            <span class="inline-block align-middle p-1"
+                >{{settings.Address}}</span
+            >
+        </div>
+        <div class="border-black border-r font-bold">
+            <span class="inline-block align-middle p-1">CLIENT</span>
+        </div>
+        <div >
+            <span class="inline-block align-middle p-1">{{
+                invoice.client.name || "______________"
+            }} , NC : {{ invoice.client.nc || "______________" }}</span>
+        </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 mt-6">
-      <div class="text-right item-center border-black border-r-2">
-        <span class="inline-block align-middle mr-2">Facture #</span>
-        <span class="inline-block align-middle font-extrabold pr-2">{{ invoice.num || '______________'}}</span>
-      </div>
-      <div class="text-left item-center">
-        <span class="inline-block align-middle mr-2">Date :</span>
-        <span class="inline-block align-middle font-extrabold">{{ invoice.dateAdded || '______________' | date: 'longDate'}}</span>
-      </div>
+    <div class="grid grid-cols-2 gap-1 mt-3 text-sm">
+        <div class="text-right item-center border-black border-r">
+            <span class="inline-block align-middle mr-2">Facture #</span>
+            <span class="inline-block align-middle font-bold pr-2">{{
+                code_facture || "______________"
+            }}</span>
+        </div>
+        <div class="text-left item-center">
+            <span class="inline-block align-middle mr-2">Date :</span>
+            <span class="inline-block align-middle font-bold">{{
+                invoice.dateAdded || "______________" | date: "longDate"
+            }}</span>
+        </div>
     </div>
 
     <!-- Tableau des lignes -->
-    <div class="mt-6">
-      <table class="min-w-full border border-black">
-        <thead>
-          <tr>
-            <th class="border border-black px-4 py-2 w-[30rem]">DESIGNATION</th>
-            <th class="border border-black px-4 py-2">QUANTITE</th>
-            <th class="border border-black px-4 py-2">PUH</th>
-            <th class="border border-black px-4 py-2">PTH</th>
-            <th class="border border-black px-4 py-2">PVC</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ligne of invoice.lignes">
-            <td *ngIf="ligne.DESIGNATION?.name" class="border border-black px-4 py-2">{{ ligne.DESIGNATION?.name || ligne.DESIGNATION || '-' }}</td>
-            <td *ngIf="ligne.DESIGNATION?.name" class="border border-black px-4 py-2">{{ ligne.QUANTITY }}</td>
-            <td *ngIf="ligne.DESIGNATION?.name" class="border border-black px-4 py-2">{{ ligne.PUH }}</td>
-            <td *ngIf="ligne.DESIGNATION?.name" class="border border-black px-4 py-2">{{ ligne.PTH }}</td>
-            <td *ngIf="ligne.DESIGNATION?.name" class="border border-black px-4 py-2">{{ ligne.PVC }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="mt-3 text-sm">
+        <table class="min-w-full border border-black">
+            <thead class="border border-black">
+                <tr>
+                    <th class="border border-black p-1 bg-gray-100">
+                        DESIGNATION
+                    </th>
+                    <th class="border border-black p-1 bg-gray-100">
+                        QUANTITE
+                    </th>
+                    <th class="border border-black p-1 bg-gray-100">
+                        PUH <span style="opacity: 0.5">(FCFA)</span>
+                    </th>
+                    <th
+                        *ngIf="showTvaInput"
+                        class="border border-black p-1 bg-gray-100"
+                    >
+                        PUTTC <span style="opacity: 0.5">(FCFA)</span>
+                    </th>
+                    <th class="border border-black p-1 bg-gray-100">
+                        PTH <span style="opacity: 0.5">(FCFA)</span>
+                    </th>
+                    <th
+                        *ngIf="showTvaInput"
+                        class="border border-black p-1 bg-gray-100"
+                    >
+                        PTTTC <span style="opacity: 0.5">(FCFA)</span>
+                    </th>
+                    <th class="border border-black p-1 bg-gray-100">
+                        PVC <span style="opacity: 0.5">(FCFA)</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ligne of invoice.lignes">
+                    <td
+                        *ngIf="ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.DESIGNATION?.name || "-" }}
+                    </td>
+                    <td
+                        *ngIf="ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.QUANTITY }}
+                    </td>
+                    <td
+                        *ngIf="ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.PUH }}
+                    </td>
+                    <td
+                        *ngIf="showTvaInput && ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.PUTTC }}
+                    </td>
+                    <td
+                        *ngIf="ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.PTH }}
+                    </td>
+                    <td
+                        *ngIf="showTvaInput && ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.PTTTC }}
+                    </td>
+                    <td
+                        *ngIf="ligne.DESIGNATION?.name"
+                        class="border border-black p-1"
+                    >
+                        {{ ligne.PVC }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!-- Totaux -->
-    <div class="mt-8 flex w-full">
-      <div class="flex flex-col border-black border-2" style="width: 30.1rem;">
-        <div class="border-black border-b-2 bg-gray-50 font-extrabold">
-          <span class="inline-block align-middle p-2">TOTAL HORS TAXES</span>
+    <div class="mt-3 flex w-full text-sm " >
+        <div class="flex flex-col border-black border" style="width: 30.1rem">
+            <div class="border-black border-b font-bold">
+                <span class="inline-block align-middle p-1 "
+                    >TOTAL HORS TAXES</span
+                >
+            </div>
+            <div *ngIf="showTvaInput" class="font-bold border-black border-b">
+                <span class="inline-block align-middle p-1 "
+                    >TOTAL AVEC TAXES</span
+                >
+            </div>
+            <div *ngIf="showPrecompteInput" class="font-bold border-black border-b">
+                <span class="inline-block align-middle p-1 ">PRECOMPTE ( {{ settings.PRECOMPTE*100  || "__" }}% )</span>
+            </div>
+            <div *ngIf="showTvaInput" class="font-bold">
+                <span class="inline-block align-middle p-1 ">TOTAL TVA ( {{ settings.TVA*100 || "__" }}% )</span>
+            </div>
         </div>
-        <div class="font-extrabold border-black border-b-2 bg-gray-50">
-          <span class="inline-block align-middle p-2">TOTAL AVEC TAXES</span>
-        </div>
-        <div class="font-extrabold border-black border-b-2 bg-gray-50">
-          <span class="inline-block align-middle p-2">TOTAL ECOMPs</span>
-        </div>
-        <div class="font-extrabold bg-gray-50">
-          <span class="inline-block align-middle p-2">TOTAL TVAs</span>
-        </div>
-      </div>
 
-      <div class="flex flex-col border-black border-t-2 border-r-2 border-b-2 flex-1">
-        <div class="bg-gray-50 border-black border-b-2">
-          <span class="inline-block align-middle p-2">{{ invoice.HT || '__error__' }} FCFA</span>
+        <div
+            class="flex flex-col border-black border-t border-r border-b flex-1"
+        >
+            <div class="border-black border-b">
+                <span class="inline-block align-middle p-1 "
+                    >{{ invoice.HT || "__error__" }}
+                    <span  style="opacity: 0.5">FCFA</span></span
+                >
+            </div>
+            <div *ngIf="showTvaInput" class="border-black border-b">
+                <span class="inline-block align-middle p-1 "
+                    >{{ invoice.TTC }}
+                    <span  style="opacity: 0.5">FCFA</span></span
+                >
+            </div>
+            <div *ngIf="showPrecompteInput" class="border-black border-b">
+                <span class="inline-block align-middle p-1 "
+                    >{{ invoice.PRECOMPTE }}
+                    <span  style="opacity: 0.5">FCFA</span></span
+                >
+            </div>
+            <div *ngIf="showTvaInput" >
+                <span class="inline-block align-middle p-1 "
+                    >{{ invoice.TVA }}
+                    <span style="opacity: 0.5">FCFA</span></span
+                >
+            </div>
         </div>
-        <div *ngIf="invoice.TTC" class="bg-gray-50 border-black border-b-2">
-          <span class="inline-block align-middle p-2">{{ invoice.TTC }} FCFA</span>
-        </div>
-        <div *ngIf="invoice.ECOMP" class="bg-gray-50 border-black border-b-2">
-          <span class="inline-block align-middle p-2">{{ invoice.ECOMP }} FCFA</span>
-        </div>
-        <div *ngIf="invoice.TVA" class="bg-gray-50">
-          <span class="inline-block align-middle p-2">{{ invoice.TVA }} FCFA</span>
-        </div>
-      </div>
     </div>
 
     <!-- Avance -->
-    <div *ngIf="invoice.avance" class="mt-8 flex w-full">
-      <div class="flex flex-col border-black border-2 w-[30.1rem]">
-        <div class="bg-gray-50 font-extrabold">
-          <span class="inline-block align-middle p-2">AVANCE</span>
+    <div *ngIf="showAvanceInput" class="mt-3 flex w-full text-sm ">
+        <div class="flex flex-col border-black border w-[30.1rem]">
+            <div class="font-bold ">
+                <span class="inline-block align-middle p-1 ">AVANCE</span>
+            </div>
         </div>
-      </div>
 
-      <div class="flex flex-col border-black border-t-2 border-r-2 flex-1">
-        <div class="bg-gray-50 border-black border-b-2">
-          <span class="inline-block align-middle p-2">{{ invoice.avance || '__error__' }} FCFA</span>
+        <div class="flex flex-col border-black border-t border-r flex-1">
+            <div class="border-black border-b">
+                <span class="inline-block align-middle p-1">{{
+                    invoice.avance || "__error__"
+                }}</span>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Paiement -->
-    <div class="mt-12">
-      <div>
-        <span class="font-bold">DETAILS DE PAIEMENT</span>
-      </div>
-      <div class="grid grid-cols-2 border-black border-2 mt-4">
-        <div class="border-black border-r-2 border-b-2 bg-gray-50 font-extrabold">
-          <span class="inline-block align-middle p-2">BANQUE</span>
+    <div class="mt-4 flex gap-1 justify-between text-sm ">
+        <div class="flex justify-end">
+            <img style="width: 7rem;" src="/img/imgInvoiceFooter2.png" alt="" />
         </div>
-        <div class="border-black border-b-2 bg-gray-50">
-          <span class="inline-block align-middle p-2">ATLANTIQUE :123488930903948</span>
+        <div style="width: max-content;" class="text-center">
+            <div class="w-full">
+                <span class="font-normal  mb-2">
+                    Siège social Yaoundé-Cameroun N° CONT
+                    {{ settings.NC }}</span
+                >
+            </div>
+            <div class="w-full">
+                <span class="font-normal  mb-2"> COMPTE BANQUE {{settings.Banque}}: {{settings.CompteB}}</span>
+            </div>
+            <div class="w-full">
+                <span class="font-normal  mb-2"> Paiement par chèque</span>
+            </div>
+            <div class="w-full">
+                <span class="font-normal  mb-2"> Payement par orange au  {{settings.Orange}} ou Mobile money {{settings.MTN}}</span>
+            </div>
+            <div class="w-full">
+                <span class="font-normal  mb-2"> E-MAIL: {{ settings.Email }}</span>
+            </div>
+            <div *ngIf="invoice.avance" class="flex w-full">
+                <span class="font-normal  mb-2"
+                    >Merci d'effectuer votre paiement au plus tard le
+                    {{ invoice.echeance | date: "shortDate" }}.</span
+                >
+            </div>
+            <div class="w-full">
+                <span class="font-normal ">
+                    Les marchandises vendues ne sont ni reprises ni
+                    échangées</span
+                >
+            </div>
         </div>
-        <div class="border-black border-r-2 font-extrabold bg-gray-50">
-          <span class="inline-block align-middle p-2">MOBILE MONEY</span>
+        <div class="flex justify-start">
+            <img style="width: 7rem;" src="/img/imgInvoiceFooter1.png" alt="" />
         </div>
-        <div class="bg-gray-50">
-          <span class="inline-block align-middle p-2">654837863 / 698916150</span>
-        </div>
-      </div>
     </div>
-
-    <div *ngIf="invoice.avance" class="mt-8 flex w-full">
-      <span class="font-medium">Veuillez effectuer votre paiement au plus tard le {{ invoice.echeance }}. Je vous remercie de votre attention.</span>
-    </div>
-  </div>
+</div>

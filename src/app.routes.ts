@@ -5,7 +5,7 @@ import { NotfoundComponent } from './app/pages/notfound/notfound.component';
 import { SettingsComponent } from './app/pages/settings/settings.component';
 import { SetupComponent } from './app/pages/setup/setup.component';
 import { authGuard } from './app/pages/guards/auth.guard';
-import { DivideInvoiceComponent } from './app/pages/divide-invoice/divide-invoice.component';
+import { DivideInvoiceComponent } from './app/pages/invoice_ui/divide-invoice/divide-invoice.component';
 import { PrintInvoiceComponent } from './app/pages/print-invoice/print-invoice.component';
 
 

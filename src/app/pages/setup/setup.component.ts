@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { UserService } from '../service/user.service';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { ApplicationSettingService } from '../service/application.setting.service';
 
 @Component({
     selector: 'app-setup',
@@ -49,6 +50,7 @@ export class SetupComponent implements OnInit {
         private userService: UserService,
         private messageService: MessageService,
         private router: Router,
+        private appSetting: ApplicationSettingService,
     ) {}
     ngOnInit(): void {
         this.setupForm = this.fb.group(
@@ -155,10 +157,22 @@ export class SetupComponent implements OnInit {
 
             this.userService.createUser(formData).subscribe({
                 next: (response) => {
-                    this.showSuccess();
-                    setTimeout(() => {
-                        this.router.navigate(['/auth/' + 'signin']);
-                    }, 2000);
+                    this.appSetting
+                        .updateSettings({ isSuperAdminConfigured: true })
+                        .subscribe({
+                            next: () => {
+                                this.showSuccess();
+                                setTimeout(() => {
+                                    this.router.navigate(['/auth/signin']);
+                                }, 2000);
+                            },
+                            error: (updateError) => {
+                                this.showError(
+                                    'Erreur lors de la mise à jour des paramètres',
+                                );
+                                this.loading = false;
+                            },
+                        });
                 },
                 error: (error: HttpErrorResponse) => {
                     if (error.error && error.error.message) {

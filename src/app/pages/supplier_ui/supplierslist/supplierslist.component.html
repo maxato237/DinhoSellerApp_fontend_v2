@@ -163,8 +163,18 @@
             >
                 <div class="w-full mt-4">
                     <h4>Informations du fournisseur</h4>
-                    <div class="card mt-6">
+                    <div class="mt-6">
                         <div class="flex flex-col md:flex-row gap-6 w-full">
+                            <div class="flex flex-wrap gap-2 w-full">
+                                <label for="nc">NC/NIU</label>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    id="nc"
+                                    name="nc"
+                                    formControlName="nc"
+                                />
+                            </div>
                             <div class="flex flex-wrap gap-2 w-full">
                                 <label for="name">Nom</label>
                                 <input
@@ -200,7 +210,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex flex-col md:flex-row gap-6 mt-8 w-full"
+                            class="flex flex-col md:flex-row gap-6 mt-6 w-full"
                         >
                             <div class="flex flex-wrap gap-2 w-full">
                                 <label for="address">Adresse</label>
@@ -224,7 +234,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex flex-col md:flex-row gap-6 mt-8 w-full"
+                            class="flex flex-col md:flex-row gap-6 mt-6 w-full"
                         >
                             <div class="flex flex-wrap gap-2 w-full">
                                 <label for="postalCode">Code Postal</label>
@@ -248,7 +258,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex flex-col md:flex-row gap-6 mt-8 w-full"
+                            class="flex flex-col md:flex-row gap-6 mt-6 w-full"
                         >
                             <div class="flex flex-wrap gap-2 w-full">
                                 <label for="phone">Téléphone</label>
@@ -279,7 +289,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex flex-col md:flex-row gap-6 mt-8 w-full"
+                            class="flex flex-col md:flex-row gap-6 mt-6 w-full"
                         >
                             <div class="flex flex-wrap gap-2 w-full">
                                 <label for="website">Site Web</label>
@@ -315,7 +325,7 @@
                     </div>
 
                     <h4>Produits fournis</h4>
-                    <div class="card">
+                    <div>
                         <div
                             class=""
                             id="productsSupplied"
@@ -327,7 +337,7 @@
                                     let i = index
                                 "
                                 [formGroupName]="i"
-                                class="flex flex-col md:flex-row gap-6 m-4 w-full"
+                                class="flex flex-col md:flex-row gap-6 mb-3 w-full"
                             >
                                 <div class="flex flex-wrap gap-2 w-full">
                                     <input

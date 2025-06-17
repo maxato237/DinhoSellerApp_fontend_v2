@@ -6,7 +6,15 @@ import {
     animate,
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    OnInit,
+    OnChanges,
+    SimpleChanges,
+} from '@angular/core';
 import {
     FormArray,
     FormBuilder,
@@ -63,8 +71,7 @@ import { TableModule } from 'primeng/table';
         ]),
     ],
 })
-export class InvoiceFormComponent implements OnInit {
-    // Inputs provenant du parent
+export class InvoiceFormComponent implements OnChanges {
     @Input() form!: FormGroup;
     @Input() clients: any[] = [];
     @Input() client: any;
@@ -81,6 +88,7 @@ export class InvoiceFormComponent implements OnInit {
     @Input() erreurInput: boolean = false;
     @Input() copied: boolean = false;
     @Input() items: any[] = [];
+    @Input() isOneInvoice!: boolean;
 
     @Output() submitted = new EventEmitter<void>();
     @Output() cleared = new EventEmitter<void>();
@@ -93,44 +101,66 @@ export class InvoiceFormComponent implements OnInit {
 
     constructor(private fb: FormBuilder) {}
 
-    ngOnInit(): void {
-        const lignes = this.form.get('lignes') as FormArray;
-        lignes.push(this.createInvoiceLineFormGroup(lignes));
-
-        if (this.invoiceDevidedlignes?.length > 0) {
-            lignes.clear();
-            for (let i = 0; i < this.invoiceDevidedlignes.length; i++) {
-                const sourceLigne = this.invoiceDevidedlignes.at(i);
-
-                const newLigne = this.createInvoiceLineFormGroup(lignes);
-                newLigne.patchValue(sourceLigne.value);
-
-                const hasValue = [
-                    'DESIGNATION',
-                    'QUANTITY',
-                    'PUH',
-                    'PTH',
-                    'PVC',
-                ].some((field) => newLigne.get(field)?.value);
-                (newLigne as any).triggered = hasValue;
-
-                lignes.push(newLigne);
-            }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['form'] && !this.invoiceDevidedlignes) {
+            const lignes = this.form.get('lignes') as FormArray;
             lignes.push(this.createInvoiceLineFormGroup(lignes));
         }
-
-        if (this.client) {
+        if (changes['client']) {
             const clientControl = this.form.get('client');
-
-            clientControl?.reset();
-            clientControl?.setValue({ ...this.client });
-
+            clientControl?.patchValue({ ...this.client });
             this.handleClientChange({ value: this.client });
         }
-        if (this.divisedstatus) {
+        if (changes['divisedstatus']) {
             this.form.get('status')?.patchValue(this.divisedstatus);
             this.updatevisibleCountStatus();
         }
+        if (
+            changes['invoiceDevidedlignes'] &&
+            this.invoiceDevidedlignes?.length > 0
+        ) {
+            const lignes = this.form.get('lignes') as FormArray;
+            lignes.clear();
+
+            for (let i = 0; i < this.invoiceDevidedlignes.length; i++) {
+                const sourceLigne = this.invoiceDevidedlignes.at(i);
+                const newLigne = this.createInvoiceLineFormGroup(lignes);
+
+                const ligneValue = sourceLigne.value;
+                newLigne.patchValue({
+                    DESIGNATION: ligneValue.DESIGNATION,
+                    QUANTITY: ligneValue.QUANTITY,
+                    PUH: ligneValue.PUH,
+                    PUTTC: ligneValue.PUTTC,
+                    PTH: ligneValue.PTH,
+                    PTTTC: ligneValue.PTTTC,
+                    PVC: ligneValue.PVC,
+                });
+
+                lignes.push(newLigne);
+            }
+
+            lignes.push(this.createInvoiceLineFormGroup(lignes));
+
+            this.setupValueChangesForLignes();
+        }
+    }
+
+    setupValueChangesForLignes() {
+        const lignes = this.form.get('lignes') as FormArray;
+
+        lignes.controls.forEach((lineGroup: AbstractControl) => {
+            const qte = lineGroup.get('QUANTITY');
+            const puh = lineGroup.get('PUH');
+
+
+            if (qte && puh) {
+                qte.valueChanges.subscribe(() => this.recalculateTotals(lignes, this.client));
+                puh.valueChanges.subscribe(() => this.recalculateTotals(lignes, this.client));
+            }
+        });
+
+        this.recalculateTotals(lignes, this.client);
     }
 
     get all_lignes(): FormArray {
@@ -147,20 +177,33 @@ export class InvoiceFormComponent implements OnInit {
         client: any,
         settings: any,
     ): void {
-        const basePrice = product.price;
-        const ecomp = settings.ECOMP || 0;
+        let PUH = product.price;
+        let PVC = 0;
+
+        if (client && client.concern_ecomp) {
+            const ecomp = settings.ECOMP || 0;
+            PUH = Math.round(PUH - PUH * ecomp);
+        }
+        if (client && client.specific_price > 0) {
+            PUH = Math.round(PUH - PUH * client.specific_price);
+        }
+
         const tva = settings.TVA || 0;
         const pvcRate = settings.PVC || 0;
+        if (!client || client?.assujetti_tva) {
+            let PUTTC = 0;
+            PUTTC = Math.round(PUH + PUH * tva);
+            group.get('PUTTC')?.patchValue(PUTTC, { emitEvent: false });
+        }
 
-        const basePUH: number = basePrice - basePrice * ecomp;
-        const clientDiscountPUH = basePUH * (client?.specific_price || 0);
-        const netPUH: number = basePUH - clientDiscountPUH;
-        const pth = netPUH + netPUH * tva;
-        const pvc = netPUH + netPUH * pvcRate;
+        PVC = Math.round(
+            product.price +
+                product.price * tva +
+                (product.price + product.price * tva) * pvcRate,
+        );
 
-        group.get('PUH')?.setValue(netPUH.toFixed(2), { emitEvent: false });
-        group.get('PTH')?.setValue(pth.toFixed(2), { emitEvent: false });
-        group.get('PVC')?.setValue(pvc.toFixed(2), { emitEvent: false });
+        group.get('PUH')?.patchValue(PUH, { emitEvent: false });
+        group.get('PVC')?.patchValue(PVC, { emitEvent: false });
     }
 
     createInvoiceLineFormGroup(lignes: FormArray): FormGroup {
@@ -168,7 +211,9 @@ export class InvoiceFormComponent implements OnInit {
             DESIGNATION: [null],
             QUANTITY: [null],
             PUH: [null as number | null],
+            PUTTC: [null as number | null],
             PTH: [null as number | null],
+            PTTTC: [null as number | null],
             PVC: [null as number | null],
         });
 
@@ -180,13 +225,16 @@ export class InvoiceFormComponent implements OnInit {
             const matchingProduct = this.selectedProduct.find(
                 (p) => p.name === value,
             );
+            const client = this.form.get('client')?.value;
+            console.log('le client 1 :', client);
 
             if (!matchingProduct) {
                 group.get('PUH')?.reset();
+                group.get('PUTTC')?.reset();
                 group.get('PTH')?.reset();
+                group.get('PTTTC')?.reset();
                 group.get('PVC')?.reset();
             } else {
-                const client = this.form.get('client')?.value;
                 this.updatePriceFieldsForProduct(
                     group,
                     matchingProduct,
@@ -194,58 +242,83 @@ export class InvoiceFormComponent implements OnInit {
                     this.settings,
                 );
             }
-            this.recalculateTotals(lignes);
+            this.recalculateTotals(lignes, client);
         });
 
         group.get('QUANTITY')?.valueChanges.subscribe(() => {
-            this.recalculateTotals(lignes);
+            const client = this.form.get('client')?.value;
+            console.log('le client 2 :', client);
+            this.recalculateTotals(lignes, client);
         });
 
         (group as any).triggered = false;
         return group;
     }
 
-    recalculateTotals(lignes: FormArray) {
+    recalculateTotals(lignes: FormArray, client?: any) {
+
         let totalHT = 0;
-        let totalEcomp = 0;
+        let totalPrecompte = 0;
         let totalTVA = 0;
         let totalTTC = 0;
 
         lignes.controls.forEach((lineGroup) => {
-            const quantity = lineGroup.get('QUANTITY')?.value || 0;
-            const product = lineGroup.get('DESIGNATION')?.value;
-            const netpuh = lineGroup.get('PUH')?.value || 0;
-            const netpth = lineGroup.get('PTH')?.value || 0;
+            const quantity = +lineGroup.get('QUANTITY')?.value || 0;
+            const puh = +lineGroup.get('PUH')?.value || 0;
 
-            if (!quantity || !netpuh) return;
+            let pth = 0;
+            let ptttc = 0;
 
-            const netHT = quantity * netpuh;
-            const netTTC = quantity * netpth;
-            const ecomp = product.price * (this.settings.ECOMP || 0);
+            if (quantity > 0 && puh > 0) {
+                pth = quantity * puh;
+                lineGroup.get('PTH')?.patchValue(pth, { emitEvent: false });
 
-            const tva = netpuh * (this.settings.TVA || 0);
-
-            totalHT += netHT;
-            totalEcomp += ecomp;
-            totalTVA += tva;
-            totalTTC += netTTC;
+                if (!client || client?.assujetti_tva) {
+                    const puttc = +lineGroup.get('PUTTC')?.value || 0;
+                    ptttc = quantity * puttc;
+                    lineGroup
+                        .get('PTTTC')
+                        ?.patchValue(ptttc, { emitEvent: false });
+                    totalTTC += ptttc;
+                }
+                totalHT += pth;
+            } else {
+                lineGroup.get('PTH')?.reset();
+                lineGroup.get('PTTTC')?.reset();
+            }
         });
 
-        this.form.get('HT')?.setValue(totalHT.toFixed(2))
-        this.form.get('ECOMP')?.setValue(totalEcomp.toFixed(2))
-        this.form.get('TVA')?.setValue(totalTVA.toFixed(2))
-        this.form.get('TTC')?.setValue(totalTTC.toFixed(2))
+        if (!client || client?.concern_precompte) {
+            const precompteRate = this.settings.PRECOMPTE || 0;
+            totalPrecompte = totalHT * precompteRate;
+        }
+        if (!client || client?.assujetti_tva) {
+            const tvaRate = this.settings.TVA || 0;
+            totalTVA = totalHT * tvaRate;
+        }
+
+        this.form
+            .get('PRECOMPTE')
+            ?.patchValue(Math.round(totalPrecompte), { emitEvent: false });
+        this.form
+            .get('TVA')
+            ?.patchValue(Math.round(totalTVA), { emitEvent: false });
+        this.form
+            .get('TTC')
+            ?.patchValue(Math.round(totalTTC), { emitEvent: false });
+        this.form
+            .get('HT')
+            ?.patchValue(Math.round(totalHT), { emitEvent: false });
     }
 
     reapplyPricingToAllLines(client: any) {
-        // const lignes = this.form.get('lignes') as FormArray;
         const lignes = this.all_lignes;
 
         lignes.controls.forEach((lineGroup) => {
             const designation = lineGroup.get('DESIGNATION')?.value;
-            const puh = lineGroup.get('PUH')?.value;
+            const puttc = lineGroup.get('PUTTC')?.value;
 
-            if (!designation || !puh) {
+            if (!designation || !puttc) {
                 return;
             }
 
@@ -272,9 +345,13 @@ export class InvoiceFormComponent implements OnInit {
 
         if (derniereLigne.triggered) return;
 
-        const hasValue = ['DESIGNATION', 'QUANTITY', 'PUH', 'PTH', 'PVC'].some(
-            (field) => derniereLigne.get(field)?.value !== '',
-        );
+        const hasValue = [
+            'DESIGNATION',
+            'QUANTITY',
+            'PUTTC',
+            'PTH',
+            'PVC',
+        ].some((field) => derniereLigne.get(field)?.value !== '');
 
         if (hasValue) {
             derniereLigne.triggered = true;
@@ -284,7 +361,7 @@ export class InvoiceFormComponent implements OnInit {
             const lastHasValue = [
                 'DESIGNATION',
                 'QUANTITY',
-                'PUH',
+                'PUTTC',
                 'PTH',
                 'PVC',
             ].some((field) => derniereValeur.get(field)?.value !== '');
@@ -298,7 +375,10 @@ export class InvoiceFormComponent implements OnInit {
     supprimerLigne(index: number) {
         if (this.all_lignes.length > 1) {
             this.all_lignes.removeAt(index);
-            this.recalculateTotals(this.all_lignes);
+            this.recalculateTotals(
+                this.all_lignes,
+                this.form.get('client')?.value,
+            );
         }
     }
 
@@ -333,6 +413,7 @@ export class InvoiceFormComponent implements OnInit {
 
     handleClientChange(event: any) {
         const client = event.value;
+        console.log('client sélectionné :', client);
         this.reapplyPricingToAllLines(client);
         this.updatevisibleCountTva();
     }
@@ -353,16 +434,6 @@ export class InvoiceFormComponent implements OnInit {
 
     submit() {
         if (this.form.valid) {
-            const client = this.form.get('client')?.value;
-
-            if (!client || client?.concern_ecomp) {
-                this.form.get('ECOMP')?.reset();
-            }
-
-            if (!client || client?.assujetti_tva) {
-                this.form.get('TVA')?.reset();
-            }
-
             this.submitted.emit(this.form.value);
         } else {
             this.erreurInput = true;
@@ -387,7 +458,7 @@ export class InvoiceFormComponent implements OnInit {
             );
 
             if (duplicates.length > 1) {
-                control.setValue('');
+                control.patchValue('');
                 this.error.emit(currentDesignation.name + ' existe déjà !');
                 return { duplicateDesignation: true };
             }
@@ -407,12 +478,13 @@ export class InvoiceFormComponent implements OnInit {
     }
 
     updatevisibleCountTva() {
-        this.visibleCountTva = 1;
+        let count = 1;
+
         const client = this.form.get('client')?.value;
 
-        if (!client || client.assujetti_tva) this.visibleCountTva += 1;
-        if (!client || client.concern_ecomp) this.visibleCountTva += 1;
+        if (!client || client.assujetti_tva) count += 2; // TVA et TTC
+        if (!client || client.concern_precompte) count += 1; // Précompte
 
-        this.visibleCountTva += 1;
+        this.visibleCountTva = count;
     }
 }
