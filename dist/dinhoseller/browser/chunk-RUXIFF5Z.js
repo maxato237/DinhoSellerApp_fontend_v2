@@ -1,0 +1,5 @@
+import{$a as B,Da as v,Ea as j,_a as F}from"./chunk-OZDOVG45.js";import{Fb as l,Gb as p,Lc as y,Rc as M,U as r,V as c,Xb as m,_ as a,ab as s,bb as d,d as D,eb as u,ia as i,pb as f,sc as g}from"./chunk-6FTOFNHU.js";var C,I,x,h,S,A,w=D(()=>{"use strict";M();g();g();B();j();C=["*"],I=({dt:e})=>`
+    .p-fluid{
+        width:100%
+    }
+`,x={root:"p-fluid"},h=(()=>{class e extends v{name="fluid";classes=x;theme=I;static \u0275fac=(()=>{let t;return function(o){return(t||(t=i(e)))(o||e)}})();static \u0275prov=r({token:e,factory:e.\u0275fac})}return e})(),S=(()=>{class e extends F{_componentStyle=a(h);static \u0275fac=(()=>{let t;return function(o){return(t||(t=i(e)))(o||e)}})();static \u0275cmp=s({type:e,selectors:[["p-fluid"]],hostVars:2,hostBindings:function(n,o){n&2&&f("p-fluid",!0)},features:[m([h]),u],ngContentSelectors:C,decls:1,vars:0,template:function(n,o){n&1&&(l(),p(0))},dependencies:[y],encapsulation:2,changeDetection:0})}return e})(),A=(()=>{class e{static \u0275fac=function(n){return new(n||e)};static \u0275mod=d({type:e});static \u0275inj=c({imports:[S]})}return e})()});export{S as a,A as b,w as c};
