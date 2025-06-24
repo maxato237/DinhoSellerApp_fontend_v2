@@ -1,28 +1,72 @@
 <div class="w-full flex flex-col">
     <div class="card w-full flex flex-col gap-8">
         <div class="flex flex-row justify-between items-center">
-            <div class="text-xl font-bold">
-                Paramètres de l'application
-            </div>
+            <div class="text-xl font-bold">Paramètres de l'application</div>
             <div>
-                <p-button icon="pi pi-pencil" label="Editer" variant="outlined" severity="contrast" />
+                <p-button
+                    icon="pi pi-pencil"
+                    label="Editer"
+                    variant="outlined"
+                    (click)="showApplicationSettingsDialog()"
+                    severity="contrast"
+                />
             </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">% TVA</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Numéro du contribuable
+                </div>
+                <div class="font-bold">P039012734620M</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">Email</div>
+                <div class="font-bold">drinhoseller</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Numéro Orange
+                </div>
+                <div class="font-bold">696493017</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">Numéro MTN</div>
+                <div class="font-bold">678995864</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">Address</div>
+                <div class="font-bold">Rond point express</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">Banque</div>
+                <div class="font-bold">ATLANTIQUE</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Numéro du compte
+                </div>
+                <div class="font-bold">1234789000300003</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">% TVA</div>
                 <div class="font-bold">20</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">% Ecomp</div>
+                <div class="font-semibold text-gray-400 mb-2">% PRECOMPTE</div>
                 <div class="font-bold">15</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">% bénéfices</div>
+                <div class="font-semibold text-gray-400 mb-2">% ECOMP</div>
+                <div class="font-bold">15</div>
+            </div>
+            <div>
+                <div class="font-semibold text-gray-400 mb-2">% bénéfices</div>
                 <div class="font-bold">25</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">% Revente du client</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    % Revente du client
+                </div>
                 <div class="font-bold">20</div>
             </div>
         </div>
@@ -30,78 +74,498 @@
 
     <div class="card w-full flex flex-col gap-8">
         <div class="flex flex-row justify-between items-center">
-            <div class="text-xl font-bold">
-                Informations personnelles
-            </div>
+            <div class="text-xl font-bold">Informations personnelles</div>
             <div>
-                <p-button icon="pi pi-pencil" label="Editer" variant="outlined" severity="contrast" />
+                <p-button
+                    icon="pi pi-pencil"
+                    label="Editer"
+                    variant="outlined"
+                    severity="contrast"
+                    (onClick)="showAccountDataDialog()"
+                />
             </div>
         </div>
-        <div class="grid  sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Nom</div>
+                <div class="font-semibold text-gray-400 mb-2">Nom</div>
                 <div class="font-bold">NKENG ATO</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Prénom</div>
+                <div class="font-semibold text-gray-400 mb-2">Prénom</div>
                 <div class="font-bold">Maxime Melaine</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Date de naissance</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Date de naissance
+                </div>
                 <div class="font-bold">15/04/1999</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Genre</div>
+                <div class="font-semibold text-gray-400 mb-2">Genre</div>
                 <div class="font-bold">Masculin</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Adresse</div>
+                <div class="font-semibold text-gray-400 mb-2">Adresse</div>
                 <div class="font-bold">Yaoundé,Soa,Nkolfoulou</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Adresse mail</div>
+                <div class="font-semibold text-gray-400 mb-2">Adresse mail</div>
                 <div class="font-bold">_________________</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Pays</div>
+                <div class="font-semibold text-gray-400 mb-2">Pays</div>
                 <div class="font-bold">Cameroun</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Ville</div>
+                <div class="font-semibold text-gray-400 mb-2">Ville</div>
                 <div class="font-bold">Yaoundé</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Adresse mail personnel</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Adresse mail personnel
+                </div>
                 <div class="font-bold">maxato000&#64;gmail.com</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Numéro de téléphone</div>
-                <div class="font-bold">+237698916150 </div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Numéro de téléphone
+                </div>
+                <div class="font-bold">+237698916150</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Poste</div>
+                <div class="font-semibold text-gray-400 mb-2">Poste</div>
                 <div class="font-bold">Ingénieur logiciel</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Date début d’embauche</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Date début d’embauche
+                </div>
                 <div class="font-bold">15/04/2013</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Type de contrat</div>
+                <div class="font-semibold text-gray-400 mb-2">
+                    Type de contrat
+                </div>
                 <div class="font-bold">CDI</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Salaire</div>
+                <div class="font-semibold text-gray-400 mb-2">Salaire</div>
                 <div class="font-bold">120000 FCFA</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Rôle</div>
+                <div class="font-semibold text-gray-400 mb-2">Rôle</div>
                 <div class="font-bold">Utilisateur</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2 ">Département</div>
-                <div class="font-bold">Informatique & Système d'information</div>
+                <div class="font-semibold text-gray-400 mb-2">Département</div>
+                <div class="font-bold">
+                    Informatique & Système d'information
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Dialog for modifying application settings -->
+<p-dialog
+    header="Modifier les Paramètres d'application"
+    [(visible)]="appsettingDialog"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '70vw', 'max-height': '90vh', 'overflow-y': 'auto' }"
+    [resizable]="false"
+    [modal]="true"
+    (onHide)="cleardialog()"
+>
+    <ng-template #content>
+        <p-fluid>
+            <form
+                [formGroup]="appSettingForm"
+                class="card flex flex-col gap-6 w-full"
+            >
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="nc">NC</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="nc"
+                            formControlName="nc"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['nc'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="email">Email</label>
+                        <input
+                            pInputText
+                            type="email"
+                            id="email"
+                            formControlName="email"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['email'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="orange">Orange</label>
+                        <input
+                            pInputText
+                            type="tel"
+                            id="orange"
+                            formControlName="orange"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['orange'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="mtn">MTN</label>
+                        <input
+                            pInputText
+                            type="tel"
+                            id="mtn"
+                            formControlName="mtn"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['mtn'].errors,
+                            }"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address">Adresse</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="address"
+                            formControlName="address"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['address'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="banque">Banque</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="banque"
+                            formControlName="banque"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['banque'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="compteb">N° Compte Bancaire</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="compteb"
+                            formControlName="compteb"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['compteb'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="TVA">TVA (%)</label>
+                        <p-inputnumber
+                            inputId="TVA"
+                            formControlName="TVA"
+                            mode="decimal"
+                            showButtons
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['TVA'].errors,
+                            }"
+                        ></p-inputnumber>
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="PRECOMPTE">Précompte (%)</label>
+                        <p-inputnumber
+                            inputId="PRECOMPTE"
+                            formControlName="PRECOMPTE"
+                            mode="decimal"
+                            showButtons
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['PRECOMPTE'].errors,
+                            }"
+                        ></p-inputnumber>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="BENEF">Bénéfices (%)</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="BENEF"
+                            formControlName="BENEF"
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['BENEF'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="PVC">PVC (%)</label>
+                        <p-inputnumber
+                            inputId="PVC"
+                            formControlName="PVC"
+                            mode="decimal"
+                            showButtons
+                            required
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    appSettingForm.controls['PVC'].errors,
+                            }"
+                        ></p-inputnumber>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ECOMP">ECOMP</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="ECOMP"
+                            formControlName="ECOMP"
+                            [readOnly]="true"
+                            [variant]="'filled'"
+                        />
+                    </div>
+                </div>
+            </form>
+        </p-fluid>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button
+            (click)="clearAppSettingForm()"
+            label="Vider"
+            icon="pi pi-times"
+            severity="danger"
+            outlined
+        />
+        <p-button
+            (click)="setApplicationSettings()"
+            type="submit"
+            label="Enregister"
+            icon="pi pi-save"
+            severity="contrast"
+            [loading]="loading"
+        />
+    </ng-template>
+</p-dialog>
+
+<!-- Dialog for modifying account data -->
+<p-dialog
+    header="Modifier les Paramètres du compte"
+    [(visible)]="accountDataDialog"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '70vw', 'overflow-y': 'auto' }"
+    [resizable]="false"
+    [modal]="true"
+    (onHide)="cleardialog()"
+>
+    <ng-template #content>
+        <p-fluid>
+            <form
+                [formGroup]="accountDataForm"
+                class="card flex flex-col gap-6 w-full"
+            >
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname">Nom</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="lastname"
+                            formControlName="lastname"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    accountDataForm.controls['lastname'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="firstname">Prénom</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="firstname"
+                            formControlName="firstname"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    accountDataForm.controls['firstname']
+                                        .errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="phone">Téléphone</label>
+                        <input
+                            pInputText
+                            type="tel"
+                            id="phone"
+                            formControlName="phone"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    accountDataForm.controls['phone'].errors,
+                            }"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="password">Mot de passe</label>
+                        <input
+                            pInputText
+                            type="password"
+                            id="password"
+                            formControlName="password"
+                            [ngClass]="{
+                                'ng-invalid ng-dirty':
+                                    erreurInput &&
+                                    accountDataForm.controls['password'].errors,
+                            }"
+                        />
+                    </div>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="date_of_birth">Date de naissance</label>
+                        <input
+                            pInputText
+                            type="date"
+                            id="date_of_birth"
+                            formControlName="date_of_birth"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="genre">Genre</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="genre"
+                            formControlName="genre"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address">Adresse</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="address"
+                            formControlName="address"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="country">Pays</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="country"
+                            formControlName="country"
+                        />
+                    </div>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="city">Ville</label>
+                        <input
+                            pInputText
+                            type="text"
+                            id="city"
+                            formControlName="city"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="personnal_mail_address"
+                            >Email personnel</label
+                        >
+                        <input
+                            pInputText
+                            type="email"
+                            id="personnal_mail_address"
+                            formControlName="personnal_mail_address"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="address_mail">Adresse mail pro</label>
+                        <input
+                            pInputText
+                            type="email"
+                            id="address_mail"
+                            formControlName="address_mail"
+                        />
+                    </div>
+                </div>
+            </form>
+        </p-fluid>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button
+            (click)="clearAccountForm()"
+            label="Vider"
+            icon="pi pi-times"
+            severity="danger"
+            outlined
+        />
+        <p-button
+            (click)="setAccountData()"
+            type="submit"
+            label="Enregister"
+            icon="pi pi-save"
+            severity="contrast"
+            [loading]="loading"
+        />
+    </ng-template>
+</p-dialog>
