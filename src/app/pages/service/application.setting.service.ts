@@ -10,7 +10,7 @@ export class ApplicationSettingService {
     private config: any;
     configIncomplete: boolean = false;
 
-    private readonly API_URL = environment.api + 'auth';
+    private readonly API_URL = environment.api + 'auth/';
 
     constructor(private http: HttpClient) {}
 
@@ -39,32 +39,6 @@ export class ApplicationSettingService {
     updateSettings(update: Partial<any>): Observable<any> {
         this.config = { ...this.config, ...update };
         console.log(this.config);
-        return this.http.put(this.API_URL + '/update', update);
-    }
-
-    isConfigurationComplete(): Observable<{ isComplete: boolean }> {
-        const requiredFields = [
-            'BENEF',
-            'ECOMP',
-            'PRECOMPTE',
-            'PVC',
-            'TVA',
-            'NC',
-            'Email',
-            'Banque',
-            'CompteB',
-            'Orange',
-            'MTN',
-            'Address',
-        ];
-
-        const isValid =
-            this.config &&
-            requiredFields.every(
-                (field) =>
-                    this.config[field] !== null && this.config[field] !== '',
-            );
-
-        return of({ isComplete: isValid });
+        return this.http.put(this.API_URL + 'update', update);
     }
 }
