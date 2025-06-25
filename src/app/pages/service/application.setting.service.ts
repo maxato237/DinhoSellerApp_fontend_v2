@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable, of } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -9,12 +10,12 @@ export class ApplicationSettingService {
     private config: any;
     configIncomplete: boolean = false;
 
-    private readonly API_URL = 'http://localhost:5000/api/auth';
+    private readonly API_URL = environment.api + 'auth';
 
     constructor(private http: HttpClient) {}
 
     loadConfig(): Promise<any> {
-    return firstValueFrom(this.http.get(this.API_URL + '/all')).then(config => {
+    return firstValueFrom(this.http.get(this.API_URL + 'all')).then(config => {
         this.config = config;
 
         const requiredFields = [
