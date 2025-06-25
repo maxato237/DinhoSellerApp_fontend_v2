@@ -17,57 +17,60 @@
                 <div class="font-semibold text-gray-400 mb-2">
                     Numéro du contribuable
                 </div>
-                <div class="font-bold">P039012734620M</div>
+                <div class="font-bold">{{settings.NC ? settings.NC : '__________________'}}</div>
             </div>
             <div>
-                <div class="font-semibold text-gray-400 mb-2">Email</div>
-                <div class="font-bold">drinhoseller</div>
+            <div class="font-semibold text-gray-400 mb-2">Email</div>
+            <div class="font-bold">
+            {{ settings.Email ? (settings.Email.length > 25 ? (settings.Email | slice:0:25) + '...' : settings.Email) : '__________________' }}
             </div>
+            </div>
+
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Numéro Orange
                 </div>
-                <div class="font-bold">696493017</div>
+                <div class="font-bold">{{settings.Orange ? settings.Orange : '__________________'}}</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Numéro MTN</div>
-                <div class="font-bold">678995864</div>
+                <div class="font-bold">{{settings.MTN ? settings.MTN : '__________________'}}</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Address</div>
-                <div class="font-bold">Rond point express</div>
+                <div class="font-bold">{{settings.Address ? settings.Address : '__________________'}}</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Banque</div>
-                <div class="font-bold">ATLANTIQUE</div>
+                <div class="font-bold">{{settings.Banque ? settings.Banque : '__________________'}}</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Numéro du compte
                 </div>
-                <div class="font-bold">1234789000300003</div>
+                <div class="font-bold">{{settings.CompteB ? settings.CompteB : '__________________'}}</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">% TVA</div>
-                <div class="font-bold">20</div>
+                <div class="font-bold">{{settings.TVA*100}}%</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">% PRECOMPTE</div>
-                <div class="font-bold">15</div>
+                <div class="font-bold">{{settings.PRECOMPTE*100}}%</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">% ECOMP</div>
-                <div class="font-bold">15</div>
+                <div class="font-bold">{{settings.ECOMP*100}}%</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">% bénéfices</div>
-                <div class="font-bold">25</div>
+                <div class="font-bold">{{settings.BENEF*100}}%</div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     % Revente du client
                 </div>
-                <div class="font-bold">20</div>
+                <div class="font-bold">{{settings.PVC*100}}%</div>
             </div>
         </div>
     </div>
@@ -88,78 +91,159 @@
         <div class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Nom</div>
-                <div class="font-bold">NKENG ATO</div>
+                <div class="font-bold">
+                    {{ user.lastname || "___________________" }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Prénom</div>
-                <div class="font-bold">Maxime Melaine</div>
+                <div class="font-bold">
+                    {{ user.firstname || "___________________" }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Date de naissance
                 </div>
-                <div class="font-bold">15/04/1999</div>
+                <div class="font-bold">
+                    {{
+                        user.details.date_of_birth
+                            ? (user.details.date_of_birth | date: "dd/MM/yyyy")
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Genre</div>
-                <div class="font-bold">Masculin</div>
+                <div class="font-bold">
+                    {{
+                        user.details.genre
+                            ? user.details.genre
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Adresse</div>
-                <div class="font-bold">Yaoundé,Soa,Nkolfoulou</div>
+                <div class="font-bold">
+                    {{
+                        user.details.address
+                            ? user.details.address
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Adresse mail</div>
-                <div class="font-bold">_________________</div>
+                <div class="font-bold">
+                    {{
+                        user.details.address_mail
+                            ? user.details.address_mail
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Pays</div>
-                <div class="font-bold">Cameroun</div>
+                <div class="font-bold">
+                    {{
+                        user.details.country
+                            ? user.details.country
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Ville</div>
-                <div class="font-bold">Yaoundé</div>
+                <div class="font-bold">
+                    {{
+                        user.details.city
+                            ? user.details.city
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Adresse mail personnel
                 </div>
-                <div class="font-bold">maxato000&#64;gmail.com</div>
+                <div class="font-bold">
+                    {{
+                        user.details.personnal_mail_address
+                            ? user.details.personnal_mail_address
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Numéro de téléphone
                 </div>
-                <div class="font-bold">+237698916150</div>
+                <div class="font-bold">
+                    {{ user.phone ? user.phone : "___________________" }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Poste</div>
-                <div class="font-bold">Ingénieur logiciel</div>
+                <div class="font-bold">
+                    {{
+                        user.details.post
+                            ? user.details.post
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Date début d’embauche
                 </div>
-                <div class="font-bold">15/04/2013</div>
+                <div class="font-bold">
+                    {{
+                        user.details.start_date_of_hire
+                            ? (user.details.start_date_of_hire
+                              | date: "dd/MM/yyyy")
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">
                     Type de contrat
                 </div>
-                <div class="font-bold">CDI</div>
+                <div class="font-bold">
+                    {{
+                        user.details.contract_type
+                            ? user.details.contract_type
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Salaire</div>
-                <div class="font-bold">120000 FCFA</div>
+                <div class="font-bold">
+                    {{
+                        user.details.salary
+                            ? user.details.salary
+                            : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Rôle</div>
-                <div class="font-bold">Utilisateur</div>
+                <div class="font-bold">
+                    {{
+                        user.role_id === 1 ? "Super Admin" : user.role_id === 2 ? "Admin" : user.role_id === 3 ? "Utilisateur" : "___________________"
+                    }}
+                </div>
             </div>
             <div>
                 <div class="font-semibold text-gray-400 mb-2">Département</div>
                 <div class="font-bold">
-                    Informatique & Système d'information
+                    {{
+                        user.details.department
+                            ? user.details.department
+                            : "___________________"
+                    }}
                 </div>
             </div>
         </div>
@@ -187,62 +271,62 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                 >
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="nc">NC</label>
+                        <label for="NC">NC</label>
                         <input
                             pInputText
                             type="text"
-                            id="nc"
-                            formControlName="nc"
+                            id="NC"
+                            formControlName="NC"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['nc'].errors,
+                                    appSettingForm.controls['NC'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="email">Email</label>
+                        <label for="Email">Email</label>
                         <input
                             pInputText
                             type="email"
-                            id="email"
-                            formControlName="email"
+                            id="Email"
+                            formControlName="Email"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['email'].errors,
+                                    appSettingForm.controls['Email'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="orange">Orange</label>
+                        <label for="Orange">Orange</label>
                         <input
                             pInputText
                             type="tel"
-                            id="orange"
-                            formControlName="orange"
+                            id="Orange"
+                            formControlName="Orange"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['orange'].errors,
+                                    appSettingForm.controls['Orange'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="mtn">MTN</label>
+                        <label for="MTN">MTN</label>
                         <input
                             pInputText
                             type="tel"
-                            id="mtn"
-                            formControlName="mtn"
+                            id="MTN"
+                            formControlName="MTN"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['mtn'].errors,
+                                    appSettingForm.controls['MTN'].errors,
                             }"
                         />
                     </div>
@@ -251,64 +335,64 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                 >
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="address">Adresse</label>
+                        <label for="Address">Adresse</label>
                         <input
                             pInputText
                             type="text"
-                            id="address"
-                            formControlName="address"
+                            id="Address"
+                            formControlName="Address"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['address'].errors,
+                                    appSettingForm.controls['Address'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="banque">Banque</label>
+                        <label for="Banque">Banque</label>
                         <input
                             pInputText
                             type="text"
-                            id="banque"
-                            formControlName="banque"
+                            id="Banque"
+                            formControlName="Banque"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['banque'].errors,
+                                    appSettingForm.controls['Banque'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="compteb">N° Compte Bancaire</label>
+                        <label for="CompteB">N° Compte Bancaire</label>
                         <input
                             pInputText
                             type="text"
-                            id="compteb"
-                            formControlName="compteb"
+                            id="CompteB"
+                            formControlName="CompteB"
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
-                                    appSettingForm.controls['compteb'].errors,
+                                    appSettingForm.controls['CompteB'].errors,
                             }"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="TVA">TVA (%)</label>
-                        <p-inputnumber
-                            inputId="TVA"
+                        <input
+                            pInputText
+                            type="text"
+                            id="TVA"
                             formControlName="TVA"
-                            mode="decimal"
-                            showButtons
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
                                     appSettingForm.controls['TVA'].errors,
                             }"
-                        ></p-inputnumber>
+                        />
                     </div>
                 </div>
                 <div
@@ -316,8 +400,10 @@
                 >
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="PRECOMPTE">Précompte (%)</label>
-                        <p-inputnumber
-                            inputId="PRECOMPTE"
+                        <input
+                            pInputText
+                            type="text"
+                            id="PRECOMPTE"
                             formControlName="PRECOMPTE"
                             mode="decimal"
                             showButtons
@@ -327,7 +413,7 @@
                                     erreurInput &&
                                     appSettingForm.controls['PRECOMPTE'].errors,
                             }"
-                        ></p-inputnumber>
+                        >
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="BENEF">Bénéfices (%)</label>
@@ -346,18 +432,18 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="PVC">PVC (%)</label>
-                        <p-inputnumber
-                            inputId="PVC"
+                        <input
+                            pInputText
+                            type="text"
+                            id="PVC"
                             formControlName="PVC"
-                            mode="decimal"
-                            showButtons
                             required
                             [ngClass]="{
                                 'ng-invalid ng-dirty':
                                     erreurInput &&
                                     appSettingForm.controls['PVC'].errors,
                             }"
-                        ></p-inputnumber>
+                        />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ECOMP">ECOMP</label>
@@ -400,7 +486,7 @@
     [(visible)]="accountDataDialog"
     [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [style]="{ width: '70vw', 'overflow-y': 'auto' }"
+    [style]="{ width: '50vw', 'overflow-y': 'auto' }"
     [resizable]="false"
     [modal]="true"
     (onHide)="cleardialog()"
@@ -412,7 +498,7 @@
                 class="card flex flex-col gap-6 w-full"
             >
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6"
                 >
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="lastname">Nom</label>
@@ -458,40 +544,22 @@
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="password">Mot de passe</label>
-                        <input
-                            pInputText
-                            type="password"
-                            id="password"
-                            formControlName="password"
-                            [ngClass]="{
-                                'ng-invalid ng-dirty':
-                                    erreurInput &&
-                                    accountDataForm.controls['password'].errors,
-                            }"
-                        />
-                    </div>
-                </div>
-
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-                >
-                    <div class="flex flex-wrap gap-2 w-full">
                         <label for="date_of_birth">Date de naissance</label>
-                        <input
-                            pInputText
-                            type="date"
-                            id="date_of_birth"
+                        <p-datepicker
+                            class="w-full"
                             formControlName="date_of_birth"
+                            [iconDisplay]="'input'"
+                            [showIcon]="true"
+                            inputId="icondisplay"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="genre">Genre</label>
-                        <input
-                            pInputText
-                            type="text"
-                            id="genre"
+                        <p-select
                             formControlName="genre"
+                            [options]="genres"
+                            optionLabel="name"
+                            class="w-full"
                         />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
@@ -505,18 +573,14 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="country">Pays</label>
-                        <input
-                            pInputText
-                            type="text"
-                            id="country"
+                        <p-select
                             formControlName="country"
+                            [options]="countries"
+                            optionLabel="name"
+                            [appendTo]="'body'"
+                            class="w-full"
                         />
                     </div>
-                </div>
-
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="city">Ville</label>
                         <input

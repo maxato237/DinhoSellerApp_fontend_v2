@@ -43,4 +43,16 @@ export class UserService {
     return this.http.post(`${this.BaseUrl}users/create`, formData,this.httpOption());
   }
 
+  updateuser(formData: FormData): Observable<any> {
+    return this.http.put(`${this.BaseUrl}users/updatemydetails`, formData, this.httpOption());
+  }
+
+  getuserById(id: string): Observable<any> {
+    return this.http.get(`${this.BaseUrl}users/userById/${id}`, this.httpOption());
+  }
+
+  accountDetails(): Observable<any> {
+    return this.http.get(`${this.BaseUrl}users/accountDetails`, this.httpOption());
+  }
+
 }
